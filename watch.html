@@ -1,0 +1,660 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Watch Live — New Season Christian Church</title>
+  <meta name="description" content="Watch every Sunday live, plus the full message archive. Catch up wherever you are." />
+  <meta name="theme-color" content="#0a0908" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="icon" type="image/png" href="images/favicon.png">
+  <link rel="icon" type="image/png" sizes="64x64" href="images/favicon-64.png">
+  <style>
+    .series-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.2rem;
+    }
+    @media (max-width: 900px) { .series-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 560px) { .series-grid { grid-template-columns: 1fr; } }
+    .series-tile {
+      position: relative;
+      aspect-ratio: 16/10;
+      border-radius: var(--radius);
+      overflow: hidden;
+      border: 1px solid var(--line);
+      display: flex;
+      align-items: flex-end;
+      padding: 1.2rem;
+      transition: transform 0.5s var(--ease-out);
+    }
+    .series-tile:hover { transform: translateY(-3px); }
+    .series-tile.t1 { background: radial-gradient(circle at 30% 30%, rgba(196, 74, 69, 0.4), transparent 60%), linear-gradient(135deg, #2a1810, #0a0908); }
+    .series-tile.t2 { background: radial-gradient(circle at 70% 30%, rgba(232, 184, 122, 0.35), transparent 60%), linear-gradient(135deg, #1f1810, #0a0908); }
+    .series-tile.t3 { background: radial-gradient(circle at 40% 70%, rgba(126, 168, 196, 0.3), transparent 60%), linear-gradient(135deg, #0f1820, #0a0908); }
+    .series-tile.t4 { background: radial-gradient(circle at 60% 40%, rgba(196, 74, 69, 0.35), transparent 55%), linear-gradient(135deg, #20140e, #0a0908); }
+    .series-tile.t5 { background: radial-gradient(circle at 30% 60%, rgba(180, 130, 200, 0.25), transparent 60%), linear-gradient(135deg, #15101c, #0a0908); }
+    .series-tile.t6 { background: radial-gradient(circle at 50% 50%, rgba(126, 168, 124, 0.22), transparent 60%), linear-gradient(135deg, #0f180e, #0a0908); }
+    .series-tile::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: repeating-linear-gradient(90deg, transparent 0 2px, rgba(0,0,0,0.05) 2px 3px);
+    }
+    .series-tile-info { position: relative; z-index: 1; display: flex; flex-direction: column; gap: 0.3rem; width: 100%; }
+    .series-tile-info .meta {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+    }
+    .series-tile-info h3 {
+      font-family: var(--font-display);
+      font-weight: 400;
+      font-size: 1.6rem;
+      margin: 0;
+      letter-spacing: -0.015em;
+    }
+
+    /* Lite YouTube embed — thumbnail + play button, swaps to iframe on click */
+    .lite-yt {
+      position: relative;
+      cursor: pointer;
+      overflow: hidden;
+    }
+    .lite-yt-thumb {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.6s var(--ease-out), filter 0.3s;
+      z-index: 1;
+    }
+    .lite-yt:hover .lite-yt-thumb,
+    .lite-yt:focus-visible .lite-yt-thumb {
+      transform: scale(1.03);
+      filter: brightness(0.85);
+    }
+    .lite-yt-play {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 68px;
+      height: 48px;
+      z-index: 2;
+      pointer-events: none;
+      transition: transform 0.4s var(--ease-out), filter 0.3s;
+      filter: drop-shadow(0 6px 20px rgba(0, 0, 0, 0.5));
+    }
+    .lite-yt-play svg { width: 100%; height: 100%; display: block; }
+    .lite-yt:hover .lite-yt-play,
+    .lite-yt:focus-visible .lite-yt-play {
+      transform: translate(-50%, -50%) scale(1.1);
+      filter: drop-shadow(0 8px 28px rgba(196, 74, 69, 0.6));
+    }
+    .lite-yt-play-lg {
+      width: 96px;
+      height: 68px;
+    }
+    .lite-yt.is-playing .lite-yt-thumb,
+    .lite-yt.is-playing .lite-yt-play {
+      display: none;
+    }
+    .lite-yt iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+      z-index: 3;
+    }
+    .lite-yt:focus-visible {
+      outline: 2px solid var(--ember);
+      outline-offset: 2px;
+    }
+
+    /* Featured videos grid */
+    .featured-videos {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: clamp(1rem, 2vw, 1.5rem);
+    }
+    @media (max-width: 700px) { .featured-videos { grid-template-columns: 1fr; } }
+
+    .featured-video {
+      display: flex;
+      flex-direction: column;
+      gap: 0.9rem;
+    }
+    .featured-video-frame {
+      position: relative;
+      aspect-ratio: 16 / 9;
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: #000;
+      border: 1px solid var(--line);
+    }
+    .featured-video-frame iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+    .featured-video-frame {
+      display: block;
+      cursor: pointer;
+      transition: transform 0.5s var(--ease-out);
+    }
+    .featured-video-frame:hover { transform: translateY(-3px); }
+    .featured-video-placeholder {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      background:
+        radial-gradient(circle at center, rgba(196, 74, 69, 0.18), transparent 60%),
+        linear-gradient(135deg, var(--bg-elev), var(--bg) 70%);
+    }
+    .yt-play {
+      width: 68px;
+      height: 48px;
+      transition: transform 0.4s var(--ease-out), filter 0.3s;
+      filter: drop-shadow(0 6px 20px rgba(196, 74, 69, 0.35));
+    }
+    .featured-video-frame:hover .yt-play {
+      transform: scale(1.08);
+      filter: drop-shadow(0 8px 28px rgba(196, 74, 69, 0.5));
+    }
+    .featured-video-placeholder-label {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+    }
+    .featured-video-info {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+    .featured-video-info h3 {
+      font-family: var(--font-display);
+      font-weight: 400;
+      font-size: 1.4rem;
+      margin: 0;
+      letter-spacing: -0.015em;
+    }
+    .featured-video-meta {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+  </style>
+  <script>
+    // Pre-paint theme application — runs before body renders to avoid flash
+    (function () {
+      try {
+        var saved = localStorage.getItem('nsc-theme');
+        if (saved === 'light') {
+          document.documentElement.setAttribute('data-theme', 'light');
+        }
+      } catch (e) {}
+    })();
+  </script>
+</head>
+<body class="loading">
+
+  <!-- ============== INTRO LOADER ============== -->
+  <div class="loader" role="status" aria-label="Loading New Season Christian Church">
+    <div class="loader-grain" aria-hidden="true"></div>
+    <div class="loader-glow" aria-hidden="true"></div>
+    <div class="loader-halo" aria-hidden="true"></div>
+    <div class="loader-horizon" aria-hidden="true"></div>
+    <div class="loader-logo" aria-hidden="true">
+      <img src="images/logo-full.png" alt="New Season Christian Church">
+    </div>
+    <div class="loader-tagline">A new season is here</div>
+    <div class="loader-progress" aria-hidden="true"></div>
+    <span class="loader-skip">Tap anywhere to continue</span>
+  </div>
+
+
+  <header class="site-header">
+    <div class="container-wide">
+      <nav class="nav" aria-label="Primary">
+        <a class="brand" href="index.html" aria-label="New Season Christian Church — Home">
+          <span class="brand-mark" aria-hidden="true">
+            <img src="images/logo.png" alt="">
+          </span>
+          <span class="brand-text">
+            <span class="brand-line-1">New Season</span>
+            <span class="brand-line-2">Christian Church</span>
+          </span>
+        </a>
+        <ul class="nav-links">
+          <li><a href="index.html"><svg class="nav-icon ni-home" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path class="roof" d="M2 7 L8 2.5 L14 7"/>
+              <path class="walls" d="M3.5 6.5 V13.5 H12.5 V6.5"/>
+              <path class="door" d="M6.5 13.5 V9.5 H9.5 V13.5"/>
+            </svg><span>Home</span></a></li>
+          <li><a href="about.html"><svg class="nav-icon ni-about" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path class="spine" d="M8 4 V13"/>
+              <path class="page-l" d="M8 4 C6 3 4 3 2.5 3.5 V12 C4 11.5 6 11.5 8 12.5"/>
+              <path class="page-r" d="M8 4 C10 3 12 3 13.5 3.5 V12 C12 11.5 10 11.5 8 12.5"/>
+            </svg><span>About</span></a></li>
+          <li>
+            <a href="ministries.html">
+              <svg class="nav-icon ni-min" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+              <circle class="dot-l" cx="3.5" cy="9" r="1.8"/>
+              <circle class="dot-c" cx="8" cy="7" r="2.2"/>
+              <circle class="dot-r" cx="12.5" cy="9" r="1.8"/>
+            </svg>
+              <span>Ministries</span>
+              <svg class="nav-caret" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M2 4 L5 7 L8 4"/></svg>
+            </a>
+            <ul class="nav-dropdown" aria-label="Ministries menu">
+              <li><a href="ministries.html#kids"><span class="dd-num">01</span><span class="dd-label">Kids</span><span class="dd-meta">Ages 0–11</span></a></li>
+              <li><a href="ministries.html#youth"><span class="dd-num">02</span><span class="dd-label">Youth</span><span class="dd-meta">Ages 12–18</span></a></li>
+              <li><a href="ministries.html#young-adults"><span class="dd-num">03</span><span class="dd-label">Young Adults</span><span class="dd-meta">18–30</span></a></li>
+              <li><a href="ministries.html#women"><span class="dd-num">04</span><span class="dd-label">Women</span><span class="dd-meta">All ages</span></a></li>
+              <li><a href="ministries.html#men"><span class="dd-num">05</span><span class="dd-label">Men</span><span class="dd-meta">All ages</span></a></li>
+              <li><a href="ministries.html#outreach"><span class="dd-num">06</span><span class="dd-label">Outreach</span><span class="dd-meta">City + World</span></a></li>
+              <li class="dd-divider" aria-hidden="true"></li>
+              <li><a class="dd-footer" href="ministries.html"><span class="dd-label">All ministries</span><span>→</span></a></li>
+            </ul>
+          </li>
+          <li><a href="watch.html" class="active"><svg class="nav-icon ni-watch" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle class="ring" cx="8" cy="8" r="6"/>
+              <path class="play" d="M6.5 5.5 L11 8 L6.5 10.5 Z" fill="currentColor"/>
+            </svg><span>Watch Live</span></a></li>
+          <li><a href="give.html"><svg class="nav-icon ni-give" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path class="give-heart" d="M8 13.5 C 3 10 1.5 7.5 1.5 5.5 A 3 3 0 0 1 8 4.5 A 3 3 0 0 1 14.5 5.5 C 14.5 7.5 13 10 8 13.5 Z"/></svg><span>Give</span></a></li>
+          <li><a href="connect.html"><svg class="nav-icon ni-connect" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path class="arrow-tail" d="M3 13 L13 3"/>
+              <path class="arrow-head" d="M6 3 H13 V10"/>
+            </svg><span>Connect</span></a></li>
+        </ul>
+        <div class="nav-cta">
+          <button class="theme-toggle" type="button" aria-label="Toggle theme" id="themeToggle">
+            <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+            </svg>
+            <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="4"/>
+              <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
+            </svg>
+          </button>
+          <a href="connect.html" class="btn btn-primary">
+            <span>Plan a Visit</span>
+            <svg class="arrow" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 13 L13 3 M6 3 H13 V10"/></svg>
+          </a>
+          <button class="nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu">
+            <span></span>
+          </button>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <div class="mobile-menu" id="mobileMenu" aria-hidden="true">
+    <a href="index.html">Home</a>
+    <a href="about.html">About</a>
+    <a href="ministries.html">Ministries</a>
+    <a href="watch.html">Watch Live</a>
+    <a href="give.html">Give</a>
+    <a href="connect.html">Connect</a>
+    <div class="mm-section">
+      <div class="mm-section-label">Our Ministries</div>
+      <div class="mm-sub">
+        <a href="ministries.html#kids"><span>Kids</span><span class="mm-meta">Ages 0–11</span></a>
+        <a href="ministries.html#youth"><span>Youth</span><span class="mm-meta">12–18</span></a>
+        <a href="ministries.html#young-adults"><span>Young Adults</span><span class="mm-meta">18–30</span></a>
+        <a href="ministries.html#women"><span>Women</span><span class="mm-meta">All ages</span></a>
+        <a href="ministries.html#men"><span>Men</span><span class="mm-meta">All ages</span></a>
+        <a href="ministries.html#outreach"><span>Outreach</span><span class="mm-meta">City + World</span></a>
+      </div>
+    </div>
+  </div>
+
+  <main>
+
+    <section class="page-hero">
+      <div class="hero-grain"></div>
+      <div class="container">
+        <span class="eyebrow">Watch Live</span>
+        <h1 class="display-xl" style="margin-top:1.4rem;">Sundays, <em class="italic ember">11:00 AM.</em></h1>
+        <p class="lead" style="margin-top: 1.8rem;">Live every Sunday at 11:00 AM. Join us from wherever you are — and watch any past message anytime.</p>
+      </div>
+    </section>
+
+    <!-- LIVE PLAYER -->
+    <section class="section-tight">
+      <div class="container">
+        <div class="watch-player reveal lite-yt" data-video-id="A2C72Ia_SkU" tabindex="0" role="button" aria-label="Play video on YouTube" style="background: #000; border: 1px solid var(--line); cursor: pointer;">
+          <div class="watch-status">
+            <span class="live-dot"></span>
+            <span>LIVE · Sunday 11 AM</span>
+          </div>
+          <img class="lite-yt-thumb" loading="eager" src="https://i.ytimg.com/vi/A2C72Ia_SkU/maxresdefault.jpg" alt="" onerror="this.onerror=null;this.src='https://i.ytimg.com/vi/A2C72Ia_SkU/hqdefault.jpg';">
+          <span class="lite-yt-play lite-yt-play-lg" aria-hidden="true">
+            <svg viewBox="0 0 68 48"><path d="M66.52,7.74c-0.78-2.93-2.49-5.41-5.42-6.19C55.79,.13,34,0,34,0S12.21,.13,6.9,1.55 C3.97,2.33,2.27,4.81,1.48,7.74C0.06,13.05,0,24,0,24s0.06,10.95,1.48,16.26c0.78,2.93,2.49,5.41,5.42,6.19 C12.21,47.87,34,48,34,48s21.79-0.13,27.1-1.55c2.93-0.78,4.64-3.26,5.42-6.19C67.94,34.95,68,24,68,24S67.94,13.05,66.52,7.74z" fill="#FF0000"/><polygon points="45,24 27,14 27,34" fill="#fff"/></svg>
+          </span>
+        </div>
+        <div style="display: flex; justify-content: space-between; align-items: baseline; margin-top: 1.4rem; gap: 1rem; flex-wrap: wrap;">
+          <div>
+            <h2 class="display-md" style="margin: 0;">Sunday Service</h2>
+            <p style="margin: 0.4rem 0 0;"><span class="tag">Live · Sundays 11 AM</span></p>
+          </div>
+          <p style="margin: 0; font-family: var(--font-mono); font-size: 0.85rem; color: var(--text-dim);">@newseasonchristianchurch · YouTube</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- LATEST MESSAGES -->
+    <section class="section" id="archive">
+      <div class="container">
+        <div class="section-head reveal">
+          <div class="head-left">
+            <span class="eyebrow">Featured messages</span>
+            <h2 class="display-lg">Watch <em class="italic ember">recent sermons.</em></h2>
+          </div>
+          <p class="lead">Hand-picked messages from our YouTube channel. Replace the video IDs in the source to feature your own picks.</p>
+        </div>
+
+        <!--
+          ============================================================
+          FEATURED YOUTUBE VIDEOS
+          ============================================================
+          Each card needs a real YouTube video ID. To swap:
+          1. Open the video on YouTube
+          2. Click Share → Copy the URL — e.g.  https://youtu.be/dQw4w9WgXcQ
+          3. The video ID is the 11-character part — "dQw4w9WgXcQ"
+          4. Paste it below replacing the YOUR_VIDEO_ID_HERE placeholder
+             in BOTH the iframe `src` AND the thumbnail `data-id`.
+
+          Until you paste real IDs, the cards show a "click to watch on YouTube"
+          placeholder instead of trying to embed a video that may not load.
+          ============================================================
+        -->
+        <div class="featured-videos reveal">
+
+          <!-- Video 1 -->
+          <article class="featured-video">
+            <div class="featured-video-frame lite-yt" data-video-id="A2C72Ia_SkU" tabindex="0" role="button" aria-label="Play video on YouTube">
+              <img class="lite-yt-thumb" loading="lazy" src="https://i.ytimg.com/vi/A2C72Ia_SkU/hqdefault.jpg" alt="">
+              <span class="lite-yt-play" aria-hidden="true">
+                <svg viewBox="0 0 68 48"><path d="M66.52,7.74c-0.78-2.93-2.49-5.41-5.42-6.19C55.79,.13,34,0,34,0S12.21,.13,6.9,1.55 C3.97,2.33,2.27,4.81,1.48,7.74C0.06,13.05,0,24,0,24s0.06,10.95,1.48,16.26c0.78,2.93,2.49,5.41,5.42,6.19 C12.21,47.87,34,48,34,48s21.79-0.13,27.1-1.55c2.93-0.78,4.64-3.26,5.42-6.19C67.94,34.95,68,24,68,24S67.94,13.05,66.52,7.74z" fill="#FF0000"/><polygon points="45,24 27,14 27,34" fill="#fff"/></svg>
+              </span>
+            </div>
+            <div class="featured-video-info">
+              <h3>Sunday Service</h3>
+              <span class="featured-video-meta">Latest message</span>
+            </div>
+          </article>
+
+          <!-- Video 2 -->
+          <article class="featured-video">
+            <div class="featured-video-frame lite-yt" data-video-id="QrGD_z7nr0U" tabindex="0" role="button" aria-label="Play video on YouTube">
+              <img class="lite-yt-thumb" loading="lazy" src="https://i.ytimg.com/vi/QrGD_z7nr0U/hqdefault.jpg" alt="">
+              <span class="lite-yt-play" aria-hidden="true">
+                <svg viewBox="0 0 68 48"><path d="M66.52,7.74c-0.78-2.93-2.49-5.41-5.42-6.19C55.79,.13,34,0,34,0S12.21,.13,6.9,1.55 C3.97,2.33,2.27,4.81,1.48,7.74C0.06,13.05,0,24,0,24s0.06,10.95,1.48,16.26c0.78,2.93,2.49,5.41,5.42,6.19 C12.21,47.87,34,48,34,48s21.79-0.13,27.1-1.55c2.93-0.78,4.64-3.26,5.42-6.19C67.94,34.95,68,24,68,24S67.94,13.05,66.52,7.74z" fill="#FF0000"/><polygon points="45,24 27,14 27,34" fill="#fff"/></svg>
+              </span>
+            </div>
+            <div class="featured-video-info">
+              <h3>Last Week's Message</h3>
+              <span class="featured-video-meta">Sunday service</span>
+            </div>
+          </article>
+
+          <!-- Video 3 -->
+          <article class="featured-video">
+            <div class="featured-video-frame lite-yt" data-video-id="uyna2qT94Mw" tabindex="0" role="button" aria-label="Play video on YouTube">
+              <img class="lite-yt-thumb" loading="lazy" src="https://i.ytimg.com/vi/uyna2qT94Mw/hqdefault.jpg" alt="">
+              <span class="lite-yt-play" aria-hidden="true">
+                <svg viewBox="0 0 68 48"><path d="M66.52,7.74c-0.78-2.93-2.49-5.41-5.42-6.19C55.79,.13,34,0,34,0S12.21,.13,6.9,1.55 C3.97,2.33,2.27,4.81,1.48,7.74C0.06,13.05,0,24,0,24s0.06,10.95,1.48,16.26c0.78,2.93,2.49,5.41,5.42,6.19 C12.21,47.87,34,48,34,48s21.79-0.13,27.1-1.55c2.93-0.78,4.64-3.26,5.42-6.19C67.94,34.95,68,24,68,24S67.94,13.05,66.52,7.74z" fill="#FF0000"/><polygon points="45,24 27,14 27,34" fill="#fff"/></svg>
+              </span>
+            </div>
+            <div class="featured-video-info">
+              <h3>Earlier Message</h3>
+              <span class="featured-video-meta">Sunday service</span>
+            </div>
+          </article>
+
+          <!-- Video 4 -->
+          <article class="featured-video">
+            <div class="featured-video-frame lite-yt" data-video-id="9wgD5PZxlqs" tabindex="0" role="button" aria-label="Play video on YouTube">
+              <img class="lite-yt-thumb" loading="lazy" src="https://i.ytimg.com/vi/9wgD5PZxlqs/hqdefault.jpg" alt="">
+              <span class="lite-yt-play" aria-hidden="true">
+                <svg viewBox="0 0 68 48"><path d="M66.52,7.74c-0.78-2.93-2.49-5.41-5.42-6.19C55.79,.13,34,0,34,0S12.21,.13,6.9,1.55 C3.97,2.33,2.27,4.81,1.48,7.74C0.06,13.05,0,24,0,24s0.06,10.95,1.48,16.26c0.78,2.93,2.49,5.41,5.42,6.19 C12.21,47.87,34,48,34,48s21.79-0.13,27.1-1.55c2.93-0.78,4.64-3.26,5.42-6.19C67.94,34.95,68,24,68,24S67.94,13.05,66.52,7.74z" fill="#FF0000"/><polygon points="45,24 27,14 27,34" fill="#fff"/></svg>
+              </span>
+            </div>
+            <div class="featured-video-info">
+              <h3>Earlier Message</h3>
+              <span class="featured-video-meta">Sunday service</span>
+            </div>
+          </article>
+
+        </div>
+
+        <div style="margin-top: 2.5rem; display: flex; justify-content: center;">
+          <a href="https://www.youtube.com/@newseasonchristianchurch" target="_blank" rel="noopener" class="btn btn-primary">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M23 12a11 11 0 1 0-11 11 11 11 0 0 0 11-11ZM9.5 16.5v-9l8 4.5Z" opacity="0"/><path d="M21.6 7.2a2.5 2.5 0 0 0-1.8-1.8C18.2 5 12 5 12 5s-6.2 0-7.8.4A2.5 2.5 0 0 0 2.4 7.2C2 8.8 2 12 2 12s0 3.2.4 4.8a2.5 2.5 0 0 0 1.8 1.8C5.8 19 12 19 12 19s6.2 0 7.8-.4a2.5 2.5 0 0 0 1.8-1.8c.4-1.6.4-4.8.4-4.8s0-3.2-.4-4.8ZM10 15V9l5.2 3Z"/></svg>
+            <span>Watch all on YouTube</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ORIGINAL LATEST MESSAGES (kept below as additional list view) -->
+    <section class="section">
+      <div class="container">
+        <div class="section-head reveal">
+          <div class="head-left">
+            <span class="eyebrow">Full sermon list</span>
+            <h2 class="display-lg">Pick up <em class="italic ember">where we left off.</em></h2>
+          </div>
+          <p class="lead">A growing archive of every message — with notes, scripture, and conversation prompts for your week.</p>
+        </div>
+
+        <div class="sermons-tabs reveal" role="tablist">
+          <button class="tab active">All</button>
+          <button class="tab">Threshold</button>
+          <button class="tab">Beloved</button>
+          <button class="tab">Guest Speakers</button>
+          <button class="tab">Standalone</button>
+        </div>
+
+        <div class="sermons-list reveal">
+          <a class="sermon" href="#">
+            <span class="sermon-num">01</span>
+            <div class="sermon-title">
+              <h3>The Door You Didn't Choose</h3>
+              <span class="pastor">Pastor Daniel Reyes · Threshold pt. 3 · This week</span>
+            </div>
+            <span class="sermon-duration">38:14</span>
+            <span class="sermon-play"><svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"><path d="M3 1.5 L10 6 L3 10.5 Z"/></svg></span>
+          </a>
+          <a class="sermon" href="#">
+            <span class="sermon-num">02</span>
+            <div class="sermon-title">
+              <h3>What the Waiting is For</h3>
+              <span class="pastor">Pastor Daniel Reyes · Threshold pt. 2</span>
+            </div>
+            <span class="sermon-duration">42:51</span>
+            <span class="sermon-play"><svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"><path d="M3 1.5 L10 6 L3 10.5 Z"/></svg></span>
+          </a>
+          <a class="sermon" href="#">
+            <span class="sermon-num">03</span>
+            <div class="sermon-title">
+              <h3>Between Two Promises</h3>
+              <span class="pastor">Pastor Daniel Reyes · Threshold pt. 1</span>
+            </div>
+            <span class="sermon-duration">36:09</span>
+            <span class="sermon-play"><svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"><path d="M3 1.5 L10 6 L3 10.5 Z"/></svg></span>
+          </a>
+          <a class="sermon" href="#">
+            <span class="sermon-num">04</span>
+            <div class="sermon-title">
+              <h3>House of the Living God</h3>
+              <span class="pastor">Pastor Sarah Okafor · Standalone</span>
+            </div>
+            <span class="sermon-duration">29:42</span>
+            <span class="sermon-play"><svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"><path d="M3 1.5 L10 6 L3 10.5 Z"/></svg></span>
+          </a>
+          <a class="sermon" href="#">
+            <span class="sermon-num">05</span>
+            <div class="sermon-title">
+              <h3>The Beloved, Becoming</h3>
+              <span class="pastor">Pastor Daniel Reyes · Beloved pt. 4</span>
+            </div>
+            <span class="sermon-duration">41:18</span>
+            <span class="sermon-play"><svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"><path d="M3 1.5 L10 6 L3 10.5 Z"/></svg></span>
+          </a>
+          <a class="sermon" href="#">
+            <span class="sermon-num">06</span>
+            <div class="sermon-title">
+              <h3>You Were Named Before You Were Known</h3>
+              <span class="pastor">Pastor Daniel Reyes · Beloved pt. 3</span>
+            </div>
+            <span class="sermon-duration">34:55</span>
+            <span class="sermon-play"><svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"><path d="M3 1.5 L10 6 L3 10.5 Z"/></svg></span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- SERIES ARCHIVE -->
+    <section class="section">
+      <div class="container">
+        <div class="section-head reveal">
+          <div class="head-left">
+            <span class="eyebrow">Series archive</span>
+            <h2 class="display-lg">Every series, <em class="italic gold">in one place.</em></h2>
+          </div>
+          <p class="lead">Browse by series — from the very first message to what we're walking through right now.</p>
+        </div>
+
+        <div class="series-grid reveal">
+          <a class="series-tile t1" href="#">
+            <div class="series-tile-info">
+              <span class="meta">Now · 4 messages</span>
+              <h3>Threshold</h3>
+            </div>
+          </a>
+          <a class="series-tile t2" href="#">
+            <div class="series-tile-info">
+              <span class="meta">2025 · 5 messages</span>
+              <h3>Beloved</h3>
+            </div>
+          </a>
+          <a class="series-tile t3" href="#">
+            <div class="series-tile-info">
+              <span class="meta">2025 · 6 messages</span>
+              <h3>Guiding Lights</h3>
+            </div>
+          </a>
+          <a class="series-tile t4" href="#">
+            <div class="series-tile-info">
+              <span class="meta">2024 · 8 messages</span>
+              <h3>Mission Forward</h3>
+            </div>
+          </a>
+          <a class="series-tile t5" href="#">
+            <div class="series-tile-info">
+              <span class="meta">2024 · 4 messages</span>
+              <h3>Modelados</h3>
+            </div>
+          </a>
+          <a class="series-tile t6" href="#">
+            <div class="series-tile-info">
+              <span class="meta">2024 · 7 messages</span>
+              <h3>House Rules</h3>
+            </div>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- LISTEN ANYWHERE -->
+    <section class="section">
+      <div class="container">
+        <div class="connect-cta reveal">
+          <span class="eyebrow">Subscribe</span>
+          <h2 class="display-lg">Take the messages <em class="italic ember">on the road.</em></h2>
+          <p class="lead">Subscribe on YouTube and never miss a Sunday. Watch on-demand from anywhere.</p>
+          <div class="connect-cta-actions">
+            <a href="https://www.youtube.com/@newseasonchristianchurch?sub_confirmation=1" target="_blank" rel="noopener" class="btn btn-primary">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21.6 7.2a2.5 2.5 0 0 0-1.8-1.8C18.2 5 12 5 12 5s-6.2 0-7.8.4A2.5 2.5 0 0 0 2.4 7.2C2 8.8 2 12 2 12s0 3.2.4 4.8a2.5 2.5 0 0 0 1.8 1.8C5.8 19 12 19 12 19s6.2 0 7.8-.4a2.5 2.5 0 0 0 1.8-1.8c.4-1.6.4-4.8.4-4.8s0-3.2-.4-4.8ZM10 15V9l5.2 3Z"/></svg>
+              <span>Subscribe on YouTube</span>
+            </a>
+            <a href="https://www.youtube.com/@newseasonchristianchurch/videos" target="_blank" rel="noopener" class="btn btn-ghost">
+              <span>Browse all videos</span>
+              <svg class="arrow" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 13 L13 3 M6 3 H13 V10"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="container-wide">
+      <div class="footer-grid">
+        <div>
+          <div class="footer-brand">New <em>Season</em><br><span style="font-size: 0.55em; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-dim); font-family: var(--font-mono); display: inline-block; margin-top: 0.3rem;">Christian Church</span></div>
+          <p class="footer-blurb">New Season Christian Church is a family of people becoming who God made them to be — together, in the middle of real life.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Visit</h4>
+          <ul>
+            <li><a href="connect.html">Plan a Visit</a></li>
+            <li><a href="connect.html#location">Location</a></li>
+            <li><a href="connect.html">Service Times</a></li>
+            <li><a href="connect.html#prayer">Prayer Request</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Explore</h4>
+          <ul>
+            <li><a href="about.html">About</a></li>
+            <li><a href="ministries.html">Ministries</a></li>
+            <li><a href="watch.html">Watch Live</a></li>
+            <li><a href="give.html">Give</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Stay close</h4>
+          <ul>
+            <li><a href="#">Instagram</a></li>
+            <li><a href="https://www.youtube.com/@newseasonchristianchurch" target="_blank" rel="noopener">YouTube</a></li>
+            <li><a href="#">Facebook</a></li>
+            <li><a href="#">Spotify</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 New Season Christian Church. All rights reserved.</span>
+        <div class="footer-socials">
+          <a href="#" aria-label="Instagram"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg></a>
+          <a href="https://www.youtube.com/@newseasonchristianchurch" target="_blank" rel="noopener" aria-label="YouTube"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="5" width="20" height="14" rx="3"/><path d="M10 9 L15 12 L10 15 Z" fill="currentColor"/></svg></a>
+          <a href="#" aria-label="Facebook"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 8h3V4h-3a4 4 0 0 0-4 4v3H7v4h3v8h4v-8h3l1-4h-4V8a1 1 0 0 1 1-1Z" fill="currentColor" stroke="none"/></svg></a>
+          <a href="#" aria-label="Spotify"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M7 10c3-1 8-1 11 1 M7.5 13.5c2.5-1 6.5-1 9 0.5 M8 16.5c2-0.5 5-0.5 7 0.5"/></svg></a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

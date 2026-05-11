@@ -1,0 +1,424 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Ministries — New Season Christian Church</title>
+  <meta name="description" content="Kids, Youth, Young Adults, Women, Men, Outreach. Find your people at New Season Christian Church." />
+  <meta name="theme-color" content="#0a0908" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="icon" type="image/png" href="images/favicon.png">
+  <link rel="icon" type="image/png" sizes="64x64" href="images/favicon-64.png">
+  <style>
+    /* Ministries page — alternating large rows */
+    .ministry-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(2rem, 5vw, 4rem);
+      align-items: center;
+      padding-block: clamp(3rem, 6vw, 5rem);
+      border-bottom: 1px solid var(--line);
+    }
+    .ministry-row:last-child { border-bottom: 0; }
+    .ministry-row.reverse .ministry-visual { order: 2; }
+    @media (max-width: 800px) {
+      .ministry-row { grid-template-columns: 1fr; }
+      .ministry-row.reverse .ministry-visual { order: 0; }
+    }
+    .ministry-visual {
+      aspect-ratio: 4/5;
+      border-radius: var(--radius-lg);
+      background-color: var(--bg-elev);
+      background-size: cover;
+      background-position: center;
+      border: 1px solid var(--line);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: flex-end;
+      padding: 2rem;
+    }
+    .ministry-visual::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(180deg, rgba(10, 9, 8, 0) 30%, rgba(10, 9, 8, 0.85) 100%),
+        repeating-linear-gradient(45deg, transparent 0 4px, rgba(255,255,255,0.02) 4px 5px);
+      pointer-events: none;
+    }
+    [data-theme="light"] .ministry-visual::before {
+      background:
+        linear-gradient(180deg, rgba(10, 9, 8, 0) 30%, rgba(10, 9, 8, 0.7) 100%),
+        repeating-linear-gradient(45deg, transparent 0 4px, rgba(255,255,255,0.04) 4px 5px);
+    }
+    /* Glow accents — sit on top of the photo so each ministry still has its color identity */
+    .ministry-visual.v-ember::after { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 30% 30%, rgba(196, 74, 69, 0.4), transparent 55%); pointer-events: none; mix-blend-mode: overlay; }
+    .ministry-visual.v-gold::after { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 70% 30%, rgba(232, 184, 122, 0.35), transparent 55%); pointer-events: none; mix-blend-mode: overlay; }
+    .ministry-visual.v-cool::after { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 40% 70%, rgba(126, 168, 196, 0.3), transparent 55%); pointer-events: none; mix-blend-mode: overlay; }
+    .ministry-visual.v-rose::after { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 60% 40%, rgba(196, 74, 69, 0.35), transparent 50%); pointer-events: none; mix-blend-mode: overlay; }
+    .ministry-visual.v-forest::after { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 30% 60%, rgba(126, 168, 124, 0.25), transparent 55%); pointer-events: none; mix-blend-mode: overlay; }
+    .ministry-visual.v-violet::after { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 50% 50%, rgba(180, 130, 200, 0.25), transparent 55%); pointer-events: none; mix-blend-mode: overlay; }
+    .ministry-visual-label {
+      position: relative;
+      z-index: 1;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+    .ministry-content { display: flex; flex-direction: column; gap: 1.3rem; }
+    .ministry-content .eyebrow { color: var(--ember); }
+    .ministry-content h2 { margin: 0; }
+    .ministry-details {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      padding-top: 1.4rem;
+      border-top: 1px solid var(--line);
+      margin-top: 0.6rem;
+    }
+    .ministry-detail dt {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 0.3rem;
+    }
+    .ministry-detail dd { margin: 0; font-size: 0.98rem; color: var(--text); }
+  </style>
+  <script>
+    // Pre-paint theme application — runs before body renders to avoid flash
+    (function () {
+      try {
+        var saved = localStorage.getItem('nsc-theme');
+        if (saved === 'light') {
+          document.documentElement.setAttribute('data-theme', 'light');
+        }
+      } catch (e) {}
+    })();
+  </script>
+</head>
+<body class="loading">
+
+  <!-- ============== INTRO LOADER ============== -->
+  <div class="loader" role="status" aria-label="Loading New Season Christian Church">
+    <div class="loader-grain" aria-hidden="true"></div>
+    <div class="loader-glow" aria-hidden="true"></div>
+    <div class="loader-halo" aria-hidden="true"></div>
+    <div class="loader-horizon" aria-hidden="true"></div>
+    <div class="loader-logo" aria-hidden="true">
+      <img src="images/logo-full.png" alt="New Season Christian Church">
+    </div>
+    <div class="loader-tagline">A new season is here</div>
+    <div class="loader-progress" aria-hidden="true"></div>
+    <span class="loader-skip">Tap anywhere to continue</span>
+  </div>
+
+
+  <header class="site-header">
+    <div class="container-wide">
+      <nav class="nav" aria-label="Primary">
+        <a class="brand" href="index.html" aria-label="New Season Christian Church — Home">
+          <span class="brand-mark" aria-hidden="true">
+            <img src="images/logo.png" alt="">
+          </span>
+          <span class="brand-text">
+            <span class="brand-line-1">New Season</span>
+            <span class="brand-line-2">Christian Church</span>
+          </span>
+        </a>
+        <ul class="nav-links">
+          <li><a href="index.html"><svg class="nav-icon ni-home" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path class="roof" d="M2 7 L8 2.5 L14 7"/>
+              <path class="walls" d="M3.5 6.5 V13.5 H12.5 V6.5"/>
+              <path class="door" d="M6.5 13.5 V9.5 H9.5 V13.5"/>
+            </svg><span>Home</span></a></li>
+          <li><a href="about.html"><svg class="nav-icon ni-about" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path class="spine" d="M8 4 V13"/>
+              <path class="page-l" d="M8 4 C6 3 4 3 2.5 3.5 V12 C4 11.5 6 11.5 8 12.5"/>
+              <path class="page-r" d="M8 4 C10 3 12 3 13.5 3.5 V12 C12 11.5 10 11.5 8 12.5"/>
+            </svg><span>About</span></a></li>
+          <li>
+            <a href="ministries.html" class="active">
+              <svg class="nav-icon ni-min" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+              <circle class="dot-l" cx="3.5" cy="9" r="1.8"/>
+              <circle class="dot-c" cx="8" cy="7" r="2.2"/>
+              <circle class="dot-r" cx="12.5" cy="9" r="1.8"/>
+            </svg>
+              <span>Ministries</span>
+              <svg class="nav-caret" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M2 4 L5 7 L8 4"/></svg>
+            </a>
+            <ul class="nav-dropdown" aria-label="Ministries menu">
+              <li><a href="ministries.html#kids"><span class="dd-num">01</span><span class="dd-label">Kids</span><span class="dd-meta">Ages 0–11</span></a></li>
+              <li><a href="ministries.html#youth"><span class="dd-num">02</span><span class="dd-label">Youth</span><span class="dd-meta">Ages 12–18</span></a></li>
+              <li><a href="ministries.html#young-adults"><span class="dd-num">03</span><span class="dd-label">Young Adults</span><span class="dd-meta">18–30</span></a></li>
+              <li><a href="ministries.html#women"><span class="dd-num">04</span><span class="dd-label">Women</span><span class="dd-meta">All ages</span></a></li>
+              <li><a href="ministries.html#men"><span class="dd-num">05</span><span class="dd-label">Men</span><span class="dd-meta">All ages</span></a></li>
+              <li><a href="ministries.html#outreach"><span class="dd-num">06</span><span class="dd-label">Outreach</span><span class="dd-meta">City + World</span></a></li>
+              <li class="dd-divider" aria-hidden="true"></li>
+              <li><a class="dd-footer" href="ministries.html"><span class="dd-label">All ministries</span><span>→</span></a></li>
+            </ul>
+          </li>
+          <li><a href="watch.html"><svg class="nav-icon ni-watch" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle class="ring" cx="8" cy="8" r="6"/>
+              <path class="play" d="M6.5 5.5 L11 8 L6.5 10.5 Z" fill="currentColor"/>
+            </svg><span>Watch Live</span></a></li>
+          <li><a href="give.html"><svg class="nav-icon ni-give" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path class="give-heart" d="M8 13.5 C 3 10 1.5 7.5 1.5 5.5 A 3 3 0 0 1 8 4.5 A 3 3 0 0 1 14.5 5.5 C 14.5 7.5 13 10 8 13.5 Z"/></svg><span>Give</span></a></li>
+          <li><a href="connect.html"><svg class="nav-icon ni-connect" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path class="arrow-tail" d="M3 13 L13 3"/>
+              <path class="arrow-head" d="M6 3 H13 V10"/>
+            </svg><span>Connect</span></a></li>
+        </ul>
+        <div class="nav-cta">
+          <button class="theme-toggle" type="button" aria-label="Toggle theme" id="themeToggle">
+            <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+            </svg>
+            <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="4"/>
+              <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
+            </svg>
+          </button>
+          <a href="connect.html" class="btn btn-primary">
+            <span>Plan a Visit</span>
+            <svg class="arrow" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 13 L13 3 M6 3 H13 V10"/></svg>
+          </a>
+          <button class="nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu">
+            <span></span>
+          </button>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <div class="mobile-menu" id="mobileMenu" aria-hidden="true">
+    <a href="index.html">Home</a>
+    <a href="about.html">About</a>
+    <a href="ministries.html">Ministries</a>
+    <a href="watch.html">Watch Live</a>
+    <a href="give.html">Give</a>
+    <a href="connect.html">Connect</a>
+    <div class="mm-section">
+      <div class="mm-section-label">Our Ministries</div>
+      <div class="mm-sub">
+        <a href="ministries.html#kids"><span>Kids</span><span class="mm-meta">Ages 0–11</span></a>
+        <a href="ministries.html#youth"><span>Youth</span><span class="mm-meta">12–18</span></a>
+        <a href="ministries.html#young-adults"><span>Young Adults</span><span class="mm-meta">18–30</span></a>
+        <a href="ministries.html#women"><span>Women</span><span class="mm-meta">All ages</span></a>
+        <a href="ministries.html#men"><span>Men</span><span class="mm-meta">All ages</span></a>
+        <a href="ministries.html#outreach"><span>Outreach</span><span class="mm-meta">City + World</span></a>
+      </div>
+    </div>
+  </div>
+
+  <main>
+
+    <section class="page-hero">
+      <div class="hero-grain"></div>
+      <div class="container">
+        <span class="eyebrow">Ministries</span>
+        <h1 class="display-xl" style="margin-top:1.4rem;">Find <em class="italic ember">your people.</em></h1>
+        <p class="lead" style="margin-top: 1.8rem;">Six ministries. One family. Whatever season you're in — kid, college student, young mom, retired veteran — there's a space here that was made with you in mind.</p>
+      </div>
+    </section>
+
+    <!-- KIDS -->
+    <section class="container" id="kids">
+      <div class="ministry-row reveal">
+        <div class="ministry-visual v-ember" style="background-image: url('https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=1400&h=1000&q=85&auto=format&fit=crop'); background-size: cover; background-position: center;">
+          </div>
+        <div class="ministry-content">
+          <span class="eyebrow">01 — Kids</span>
+          <h2 class="display-lg">Where kids meet <em class="italic ember">a real Jesus.</em></h2>
+          <p class="lead">New Season Kids is a safe, joy-filled space where children encounter the love of God through age-appropriate teaching, worship, story, and play. From the nursery to fifth grade — every child is celebrated, every week.</p>
+          <p>Background-checked volunteers. Secure check-in. A space their parents are excited to bring them back to.</p>
+          <dl class="ministry-details">
+            <div class="ministry-detail"><dt>Ages</dt><dd>0–11 (Nursery → Grade 5)</dd></div>
+            <div class="ministry-detail"><dt>When</dt><dd>Sundays · 9 &amp; 11 AM</dd></div>
+            <div class="ministry-detail"><dt>Where</dt><dd>Kids Wing, Main Campus</dd></div>
+            <div class="ministry-detail"><dt>Lead</dt><dd>Pastor Mia Reyes</dd></div>
+          </dl>
+          <div><a href="connect.html" class="btn btn-ghost"><span>Pre-register your child</span><svg class="arrow" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 13 L13 3 M6 3 H13 V10"/></svg></a></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- YOUTH -->
+    <section class="container" id="youth">
+      <div class="ministry-row reverse reveal">
+        <div class="ministry-visual v-cool" style="background-image: url('https://images.unsplash.com/photo-1521791136064-7986c2920216?w=1400&h=1000&q=85&auto=format&fit=crop'); background-size: cover; background-position: center;">
+          </div>
+        <div class="ministry-content">
+          <span class="eyebrow">02 — Youth</span>
+          <h2 class="display-lg">Built for <em class="italic ember">the middle years.</em></h2>
+          <p class="lead">Middle and high schoolers becoming who God created them to be — together. Real questions, real friendships, real faith for the loudest, most-overlooked years.</p>
+          <p>Wednesdays are a midweek anchor: worship, teaching, small groups, and a lot of laughter.</p>
+          <dl class="ministry-details">
+            <div class="ministry-detail"><dt>Ages</dt><dd>12–18 (Grades 6–12)</dd></div>
+            <div class="ministry-detail"><dt>When</dt><dd>Wednesdays · 7:00 PM</dd></div>
+            <div class="ministry-detail"><dt>Where</dt><dd>The Loft</dd></div>
+            <div class="ministry-detail"><dt>Lead</dt><dd>Pastor Marcus Hale</dd></div>
+          </dl>
+          <div><a href="connect.html" class="btn btn-ghost"><span>Join the youth list</span><svg class="arrow" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 13 L13 3 M6 3 H13 V10"/></svg></a></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- YOUNG ADULTS -->
+    <section class="container" id="young-adults">
+      <div class="ministry-row reveal">
+        <div class="ministry-visual v-gold" style="background-image: url('https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=1400&h=1000&q=85&auto=format&fit=crop'); background-size: cover; background-position: center;">
+          </div>
+        <div class="ministry-content">
+          <span class="eyebrow">03 — Young Adults</span>
+          <h2 class="display-lg">For the in-between <em class="italic gold">years.</em></h2>
+          <p class="lead">College students and twenty-somethings figuring out faith, work, identity, and what comes next. A space to ask big questions without easy answers — and find people walking the same road.</p>
+          <p>Thursday nights at the church café. Dinner together first, then teaching, then small groups in living rooms across the city.</p>
+          <dl class="ministry-details">
+            <div class="ministry-detail"><dt>Ages</dt><dd>18–30</dd></div>
+            <div class="ministry-detail"><dt>When</dt><dd>Thursdays · 6:30 PM</dd></div>
+            <div class="ministry-detail"><dt>Where</dt><dd>The Café + Home Groups</dd></div>
+            <div class="ministry-detail"><dt>Lead</dt><dd>Pastor Sarah Okafor</dd></div>
+          </dl>
+          <div><a href="connect.html" class="btn btn-ghost"><span>Find a home group</span><svg class="arrow" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 13 L13 3 M6 3 H13 V10"/></svg></a></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- WOMEN -->
+    <section class="container" id="women">
+      <div class="ministry-row reverse reveal">
+        <div class="ministry-visual v-rose" style="background-image: url('https://images.unsplash.com/photo-1529390079861-591de354faf5?w=1400&h=1000&q=85&auto=format&fit=crop'); background-size: cover; background-position: center;">
+          </div>
+        <div class="ministry-content">
+          <span class="eyebrow">04 — Women</span>
+          <h2 class="display-lg">Sisters walking <em class="italic ember">in courage.</em></h2>
+          <p class="lead">A community of women across every chapter of life — single, married, mothers, grandmothers, students, leaders — learning to live in step with the Spirit and unafraid of the road ahead.</p>
+          <p>Monthly gatherings, seasonal retreats, weekly bible studies, and friendships that last past Sunday.</p>
+          <dl class="ministry-details">
+            <div class="ministry-detail"><dt>Who</dt><dd>All women, all stages</dd></div>
+            <div class="ministry-detail"><dt>When</dt><dd>Monthly · 2nd Saturday</dd></div>
+            <div class="ministry-detail"><dt>Bible Study</dt><dd>Tuesdays · 9:30 AM &amp; 7 PM</dd></div>
+            <div class="ministry-detail"><dt>Lead</dt><dd>Pastor Mia Reyes</dd></div>
+          </dl>
+          <div><a href="connect.html" class="btn btn-ghost"><span>Get the next event</span><svg class="arrow" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 13 L13 3 M6 3 H13 V10"/></svg></a></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MEN -->
+    <section class="container" id="men">
+      <div class="ministry-row reveal">
+        <div class="ministry-visual v-forest" style="background-image: url('https://images.unsplash.com/photo-1543269865-cbf427effbad?w=1400&h=1000&q=85&auto=format&fit=crop'); background-size: cover; background-position: center;">
+          </div>
+        <div class="ministry-content">
+          <span class="eyebrow">05 — Men</span>
+          <h2 class="display-lg">Brothers building <em class="italic ember">faithful lives.</em></h2>
+          <p class="lead">Men of every age learning what it looks like to live with honor, presence, and follow-through. Less performance, more substance. A space where it's safe to be the man you're actually trying to become.</p>
+          <p>Saturday morning breakfasts, small groups, and an annual retreat that's become legendary for early-morning runs and late-night fires.</p>
+          <dl class="ministry-details">
+            <div class="ministry-detail"><dt>Who</dt><dd>All men, all stages</dd></div>
+            <div class="ministry-detail"><dt>When</dt><dd>Saturdays · 7:30 AM</dd></div>
+            <div class="ministry-detail"><dt>Where</dt><dd>The Café</dd></div>
+            <div class="ministry-detail"><dt>Lead</dt><dd>Pastor Daniel Reyes</dd></div>
+          </dl>
+          <div><a href="connect.html" class="btn btn-ghost"><span>Join the next breakfast</span><svg class="arrow" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 13 L13 3 M6 3 H13 V10"/></svg></a></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- OUTREACH -->
+    <section class="container" id="outreach">
+      <div class="ministry-row reverse reveal">
+        <div class="ministry-visual v-violet" style="background-image: url('https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=1400&h=1000&q=85&auto=format&fit=crop'); background-size: cover; background-position: center;">
+          </div>
+        <div class="ministry-content">
+          <span class="eyebrow">06 — Outreach</span>
+          <h2 class="display-lg">For our city. <em class="italic ember">And beyond.</em></h2>
+          <p class="lead">We believe the church doesn't exist for itself. Outreach is how we love our city out loud — serving neighbors, partnering with schools, walking with the unhoused, and sending teams to the nations.</p>
+          <p>Whether you have an hour a month or a heart that won't sit still, there's a place for you on a team.</p>
+          <dl class="ministry-details">
+            <div class="ministry-detail"><dt>Local</dt><dd>Monthly serve days</dd></div>
+            <div class="ministry-detail"><dt>Partners</dt><dd>3 schools · 2 shelters</dd></div>
+            <div class="ministry-detail"><dt>Global</dt><dd>Annual mission trips</dd></div>
+            <div class="ministry-detail"><dt>Lead</dt><dd>Outreach Team</dd></div>
+          </dl>
+          <div><a href="connect.html" class="btn btn-ghost"><span>Sign up to serve</span><svg class="arrow" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 13 L13 3 M6 3 H13 V10"/></svg></a></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="section">
+      <div class="container">
+        <div class="connect-cta reveal">
+          <span class="eyebrow">Still not sure where to start?</span>
+          <h2 class="display-lg">Just <em class="italic ember">show up.</em></h2>
+          <p class="lead">You don't have to figure it all out before walking in. Come on a Sunday, meet a few people, and we'll help you find your next step.</p>
+          <div class="connect-cta-actions">
+            <a href="connect.html" class="btn btn-primary">
+              <span>Plan your visit</span>
+              <svg class="arrow" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 13 L13 3 M6 3 H13 V10"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="container-wide">
+      <div class="footer-grid">
+        <div>
+          <div class="footer-brand">New <em>Season</em><br><span style="font-size: 0.55em; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-dim); font-family: var(--font-mono); display: inline-block; margin-top: 0.3rem;">Christian Church</span></div>
+          <p class="footer-blurb">New Season Christian Church is a family of people becoming who God made them to be — together, in the middle of real life.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Visit</h4>
+          <ul>
+            <li><a href="connect.html">Plan a Visit</a></li>
+            <li><a href="connect.html#location">Location</a></li>
+            <li><a href="connect.html">Service Times</a></li>
+            <li><a href="connect.html#prayer">Prayer Request</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Explore</h4>
+          <ul>
+            <li><a href="about.html">About</a></li>
+            <li><a href="ministries.html">Ministries</a></li>
+            <li><a href="watch.html">Watch Live</a></li>
+            <li><a href="give.html">Give</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Stay close</h4>
+          <ul>
+            <li><a href="#">Instagram</a></li>
+            <li><a href="https://www.youtube.com/@newseasonchristianchurch" target="_blank" rel="noopener">YouTube</a></li>
+            <li><a href="#">Facebook</a></li>
+            <li><a href="#">Spotify</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 New Season Christian Church. All rights reserved.</span>
+        <div class="footer-socials">
+          <a href="#" aria-label="Instagram"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg></a>
+          <a href="https://www.youtube.com/@newseasonchristianchurch" target="_blank" rel="noopener" aria-label="YouTube"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="5" width="20" height="14" rx="3"/><path d="M10 9 L15 12 L10 15 Z" fill="currentColor"/></svg></a>
+          <a href="#" aria-label="Facebook"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 8h3V4h-3a4 4 0 0 0-4 4v3H7v4h3v8h4v-8h3l1-4h-4V8a1 1 0 0 1 1-1Z" fill="currentColor" stroke="none"/></svg></a>
+          <a href="#" aria-label="Spotify"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M7 10c3-1 8-1 11 1 M7.5 13.5c2.5-1 6.5-1 9 0.5 M8 16.5c2-0.5 5-0.5 7 0.5"/></svg></a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

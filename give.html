@@ -1,0 +1,857 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Give — New Season Christian Church</title>
+  <meta name="description" content="Give to New Season Christian Church. Support tithes, building, missions, and outreach with one-time or recurring gifts." />
+  <meta name="theme-color" content="#0a0908" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="icon" type="image/png" href="images/favicon.png">
+  <link rel="icon" type="image/png" sizes="64x64" href="images/favicon-64.png">
+  <style>
+    /* Give page styles */
+    .give-layout {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: clamp(2rem, 5vw, 4rem);
+      align-items: start;
+    }
+    @media (max-width: 900px) {
+      .give-layout { grid-template-columns: 1fr; }
+    }
+
+    .give-form-card {
+      background: var(--bg-elev);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      padding: clamp(1.8rem, 3vw, 2.5rem);
+      position: relative;
+      overflow: hidden;
+    }
+    .give-form-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--ember), transparent);
+      opacity: 0.7;
+    }
+
+    /* Frequency toggle (one-time / recurring) */
+    .give-freq {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.4rem;
+      padding: 0.35rem;
+      background: var(--bg);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      margin-bottom: 1.8rem;
+      position: relative;
+    }
+    .give-freq input[type="radio"] {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+    .give-freq label {
+      padding: 0.7rem 1rem;
+      text-align: center;
+      border-radius: 999px;
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--text-dim);
+      cursor: pointer;
+      transition: all 0.3s var(--ease-out);
+      user-select: none;
+    }
+    .give-freq input:checked + label {
+      background: var(--text);
+      color: var(--bg);
+    }
+    .give-freq label:hover { color: var(--text); }
+    .give-freq input:checked + label:hover { color: var(--bg); }
+
+    /* Recurring sub-options (shown only when "Recurring" is selected) */
+    .give-recurring-period {
+      display: none;
+      gap: 0.4rem;
+      margin: -1rem 0 1.8rem;
+      flex-wrap: wrap;
+    }
+    .give-freq input[value="recurring"]:checked ~ .give-recurring-period {
+      display: flex;
+    }
+    /* Workaround — adjacent sibling lookup */
+    .give-form.is-recurring .give-recurring-period {
+      display: flex;
+    }
+    .give-recurring-period label {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      padding: 0.5rem 1rem;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      cursor: pointer;
+      transition: all 0.25s;
+    }
+    .give-recurring-period input[type="radio"] {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+    .give-recurring-period input:checked + label {
+      background: var(--ember);
+      color: var(--bg);
+      border-color: var(--ember);
+    }
+
+    /* Section labels */
+    .give-section-label {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 0.9rem;
+      display: block;
+    }
+
+    /* Fund selector */
+    .give-funds {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.5rem;
+      margin-bottom: 1.8rem;
+    }
+    @media (max-width: 500px) {
+      .give-funds { grid-template-columns: 1fr; }
+    }
+    .give-funds input[type="radio"] {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+    .give-funds label {
+      padding: 0.95rem 1rem;
+      background: var(--bg);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: all 0.25s var(--ease-out);
+      display: flex;
+      flex-direction: column;
+      gap: 0.15rem;
+    }
+    .give-funds label:hover {
+      border-color: var(--line-strong);
+      background: var(--bg-elev-2);
+    }
+    .give-funds input:checked + label {
+      border-color: var(--ember);
+      background: rgba(196, 74, 69, 0.06);
+    }
+    .give-funds label .fund-name {
+      font-weight: 500;
+      color: var(--text);
+      font-size: 0.95rem;
+    }
+    .give-funds label .fund-desc {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+    }
+
+    /* Amount quick-pick */
+    .give-amounts {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 0.4rem;
+      margin-bottom: 0.6rem;
+    }
+    @media (max-width: 500px) {
+      .give-amounts { grid-template-columns: repeat(3, 1fr); }
+    }
+    .give-amounts input[type="radio"] {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+    .give-amounts label {
+      padding: 0.85rem 0.4rem;
+      background: var(--bg);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      text-align: center;
+      font-family: var(--font-display);
+      font-weight: 400;
+      font-size: 1.15rem;
+      letter-spacing: -0.015em;
+      cursor: pointer;
+      transition: all 0.25s var(--ease-out);
+      font-variation-settings: "opsz" 32;
+    }
+    .give-amounts label:hover {
+      border-color: var(--line-strong);
+      background: var(--bg-elev-2);
+    }
+    .give-amounts input:checked + label {
+      background: var(--ember);
+      color: var(--bg);
+      border-color: var(--ember);
+    }
+
+    /* Custom amount field */
+    .give-custom {
+      position: relative;
+      margin-bottom: 1.8rem;
+    }
+    .give-custom .dollar {
+      position: absolute;
+      left: 1.1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-dim);
+      font-family: var(--font-display);
+      font-size: 1.4rem;
+      pointer-events: none;
+      font-variation-settings: "opsz" 32;
+    }
+    .give-custom input {
+      width: 100%;
+      padding: 1rem 1rem 1rem 2.4rem;
+      background: var(--bg);
+      border: 1px solid var(--line);
+      color: var(--text);
+      border-radius: var(--radius-sm);
+      font-family: var(--font-display);
+      font-size: 1.4rem;
+      font-weight: 400;
+      letter-spacing: -0.015em;
+      transition: border-color 0.25s, background 0.25s;
+      font-variation-settings: "opsz" 32;
+      -moz-appearance: textfield;
+    }
+    .give-custom input::-webkit-outer-spin-button,
+    .give-custom input::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    .give-custom input:focus {
+      outline: none;
+      border-color: var(--ember);
+      background: var(--bg-elev-2);
+    }
+    .give-custom input::placeholder {
+      color: var(--text-muted);
+    }
+
+    /* Summary bar */
+    .give-summary {
+      background: var(--bg);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 1.2rem 1.4rem;
+      margin-bottom: 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+    }
+    .give-summary-label {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      display: block;
+      margin-bottom: 0.2rem;
+    }
+    .give-summary-value {
+      font-family: var(--font-display);
+      font-size: 1.8rem;
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      line-height: 1;
+      font-variation-settings: "opsz" 96;
+    }
+    .give-summary-value .ember { color: var(--ember); }
+    .give-summary-meta {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      color: var(--text-dim);
+      text-align: right;
+    }
+
+    /* Mobile improvements for Give page */
+    @media (max-width: 520px) {
+      .give-form-card { padding: 1.4rem 1.2rem; }
+      .give-funds label { padding: 0.85rem 0.85rem; }
+      .give-amounts { grid-template-columns: repeat(3, 1fr); gap: 0.4rem; }
+      .give-amounts label { padding: 0.8rem 0.4rem; font-size: 1rem; }
+      .give-summary {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.6rem;
+        padding: 1rem 1.2rem;
+      }
+      .give-summary-meta { text-align: left; }
+      .give-summary-value { font-size: 1.6rem; }
+      .give-freq label { font-size: 0.85rem; padding: 0.6rem 0.6rem; }
+      .give-recurring-period label { font-size: 0.68rem; padding: 0.45rem 0.85rem; }
+      .give-quote-text { font-size: 1.2rem; }
+      .give-aside-card { padding: 1.2rem; }
+      .other-way { padding: 1.2rem; }
+    }
+
+    /* Side panel */
+    .give-aside {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      position: sticky;
+      top: 100px;
+    }
+    @media (max-width: 900px) {
+      .give-aside { position: static; }
+    }
+    .give-aside-card {
+      padding: 1.5rem;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--bg-elev);
+    }
+    .give-aside-card h4 {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--ember);
+      margin: 0 0 0.7rem;
+      font-weight: 400;
+    }
+    .give-aside-card p {
+      margin: 0;
+      color: var(--text);
+      font-size: 0.95rem;
+    }
+    .give-aside-card .sub {
+      color: var(--text-dim);
+      font-size: 0.88rem;
+      margin-top: 0.4rem;
+    }
+    .give-quote {
+      padding: 2rem 1.5rem;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background:
+        radial-gradient(circle at 80% 20%, rgba(196, 74, 69, 0.12), transparent 50%),
+        linear-gradient(135deg, #1a120c 0%, var(--bg-elev) 70%);
+    }
+    .give-quote-text {
+      font-family: var(--font-display);
+      font-weight: 300;
+      font-style: italic;
+      font-size: 1.4rem;
+      line-height: 1.3;
+      letter-spacing: -0.015em;
+      color: var(--text);
+      font-variation-settings: "opsz" 72;
+      margin: 0 0 0.8rem;
+    }
+    .give-quote-attr {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    /* Submit area */
+    .give-submit {
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+    }
+    .give-submit .btn-primary {
+      width: 100%;
+      justify-content: center;
+      padding: 1.1rem 1.6rem;
+      font-size: 1rem;
+    }
+    .give-fine-print {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      text-align: center;
+      line-height: 1.5;
+    }
+
+    /* Other ways grid */
+    .other-ways {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+    }
+    @media (max-width: 800px) { .other-ways { grid-template-columns: 1fr; } }
+    .other-way {
+      padding: 1.5rem;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--bg-elev);
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      transition: border-color 0.3s, background 0.3s;
+    }
+    .other-way:hover { border-color: var(--ember); background: var(--bg-elev-2); }
+    .other-way-num {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.15em;
+      color: var(--ember);
+    }
+    .other-way h3 {
+      font-family: var(--font-display);
+      font-weight: 400;
+      font-size: 1.4rem;
+      margin: 0;
+      letter-spacing: -0.015em;
+    }
+    .other-way p { margin: 0; color: var(--text-dim); font-size: 0.92rem; }
+  </style>
+  <script>
+    // Pre-paint theme application — runs before body renders to avoid flash
+    (function () {
+      try {
+        var saved = localStorage.getItem('nsc-theme');
+        if (saved === 'light') {
+          document.documentElement.setAttribute('data-theme', 'light');
+        }
+      } catch (e) {}
+    })();
+  </script>
+</head>
+<body class="loading">
+
+  <!-- ============== INTRO LOADER ============== -->
+  <div class="loader" role="status" aria-label="Loading New Season Christian Church">
+    <div class="loader-grain" aria-hidden="true"></div>
+    <div class="loader-glow" aria-hidden="true"></div>
+    <div class="loader-halo" aria-hidden="true"></div>
+    <div class="loader-horizon" aria-hidden="true"></div>
+    <div class="loader-logo" aria-hidden="true">
+      <img src="images/logo-full.png" alt="New Season Christian Church">
+    </div>
+    <div class="loader-tagline">A new season is here</div>
+    <div class="loader-progress" aria-hidden="true"></div>
+    <span class="loader-skip">Tap anywhere to continue</span>
+  </div>
+
+  <header class="site-header">
+    <div class="container-wide">
+      <nav class="nav" aria-label="Primary">
+        <a class="brand" href="index.html" aria-label="New Season Christian Church — Home">
+          <span class="brand-mark" aria-hidden="true">
+            <img src="images/logo.png" alt="">
+          </span>
+          <span class="brand-text">
+            <span class="brand-line-1">New Season</span>
+            <span class="brand-line-2">Christian Church</span>
+          </span>
+        </a>
+        <ul class="nav-links">
+          <li><a href="index.html"><svg class="nav-icon ni-home" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path class="roof" d="M2 7 L8 2.5 L14 7"/><path class="walls" d="M3.5 6.5 V13.5 H12.5 V6.5"/><path class="door" d="M6.5 13.5 V9.5 H9.5 V13.5"/></svg><span>Home</span></a></li>
+          <li><a href="about.html"><svg class="nav-icon ni-about" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path class="spine" d="M8 4 V13"/><path class="page-l" d="M8 4 C6 3 4 3 2.5 3.5 V12 C4 11.5 6 11.5 8 12.5"/><path class="page-r" d="M8 4 C10 3 12 3 13.5 3.5 V12 C12 11.5 10 11.5 8 12.5"/></svg><span>About</span></a></li>
+          <li>
+            <a href="ministries.html"><svg class="nav-icon ni-min" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><circle class="dot-l" cx="3.5" cy="9" r="1.8"/><circle class="dot-c" cx="8" cy="7" r="2.2"/><circle class="dot-r" cx="12.5" cy="9" r="1.8"/></svg><span>Ministries</span><svg class="nav-caret" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M2 4 L5 7 L8 4"/></svg></a>
+            <ul class="nav-dropdown" aria-label="Ministries menu">
+              <li><a href="ministries.html#kids"><span class="dd-num">01</span><span class="dd-label">Kids</span><span class="dd-meta">Ages 0–11</span></a></li>
+              <li><a href="ministries.html#youth"><span class="dd-num">02</span><span class="dd-label">Youth</span><span class="dd-meta">Ages 12–18</span></a></li>
+              <li><a href="ministries.html#young-adults"><span class="dd-num">03</span><span class="dd-label">Young Adults</span><span class="dd-meta">18–30</span></a></li>
+              <li><a href="ministries.html#women"><span class="dd-num">04</span><span class="dd-label">Women</span><span class="dd-meta">All ages</span></a></li>
+              <li><a href="ministries.html#men"><span class="dd-num">05</span><span class="dd-label">Men</span><span class="dd-meta">All ages</span></a></li>
+              <li><a href="ministries.html#outreach"><span class="dd-num">06</span><span class="dd-label">Outreach</span><span class="dd-meta">City + World</span></a></li>
+              <li class="dd-divider" aria-hidden="true"></li>
+              <li><a class="dd-footer" href="ministries.html"><span class="dd-label">All ministries</span><span>→</span></a></li>
+            </ul>
+          </li>
+          <li><a href="watch.html"><svg class="nav-icon ni-watch" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle class="ring" cx="8" cy="8" r="6"/><path class="play" d="M6.5 5.5 L11 8 L6.5 10.5 Z" fill="currentColor"/></svg><span>Watch Live</span></a></li>
+          <li><a href="give.html" class="active"><svg class="nav-icon ni-give" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path class="give-heart" d="M8 13.5 C 3 10 1.5 7.5 1.5 5.5 A 3 3 0 0 1 8 4.5 A 3 3 0 0 1 14.5 5.5 C 14.5 7.5 13 10 8 13.5 Z"/></svg><span>Give</span></a></li>
+          <li><a href="connect.html"><svg class="nav-icon ni-connect" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path class="arrow-tail" d="M3 13 L13 3"/><path class="arrow-head" d="M6 3 H13 V10"/></svg><span>Connect</span></a></li>
+        </ul>
+        <div class="nav-cta">
+          <button class="theme-toggle" type="button" aria-label="Toggle theme" id="themeToggle">
+            <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+            </svg>
+            <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="4"/>
+              <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
+            </svg>
+          </button>
+          <a href="connect.html" class="btn btn-primary">
+            <span>Plan a Visit</span>
+            <svg class="arrow" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 13 L13 3 M6 3 H13 V10"/></svg>
+          </a>
+          <button class="nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu">
+            <span></span>
+          </button>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <div class="mobile-menu" id="mobileMenu" aria-hidden="true">
+    <a href="index.html">Home</a>
+    <a href="about.html">About</a>
+    <a href="ministries.html">Ministries</a>
+    <a href="watch.html">Watch Live</a>
+    <a href="give.html">Give</a>
+    <a href="connect.html">Connect</a>
+    <div class="mm-section">
+      <div class="mm-section-label">Our Ministries</div>
+      <div class="mm-sub">
+        <a href="ministries.html#kids"><span>Kids</span><span class="mm-meta">Ages 0–11</span></a>
+        <a href="ministries.html#youth"><span>Youth</span><span class="mm-meta">12–18</span></a>
+        <a href="ministries.html#young-adults"><span>Young Adults</span><span class="mm-meta">18–30</span></a>
+        <a href="ministries.html#women"><span>Women</span><span class="mm-meta">All ages</span></a>
+        <a href="ministries.html#men"><span>Men</span><span class="mm-meta">All ages</span></a>
+        <a href="ministries.html#outreach"><span>Outreach</span><span class="mm-meta">City + World</span></a>
+      </div>
+    </div>
+  </div>
+
+  <main>
+
+    <!-- PAGE HERO -->
+    <section class="page-hero">
+      <div class="hero-grain"></div>
+      <div class="container">
+        <span class="eyebrow">Give</span>
+        <h1 class="display-xl" style="margin-top:1.4rem;">Generosity is <em class="italic ember">contagious.</em></h1>
+        <p class="lead" style="margin-top: 1.8rem;">Everything we do — the messages, the kids ministry, the outreach, the prayer team — is funded by people like you. Thank you for sowing into this work.</p>
+      </div>
+    </section>
+
+    <!-- GIVE FORM -->
+    <section class="section" id="form">
+      <div class="container">
+        <div class="give-layout">
+
+          <!-- LEFT: the form -->
+          <form class="give-form give-form-card" id="giveForm" onsubmit="event.preventDefault(); alert('Form ready — connect to Stripe / Tithely / PayPal to process the donation.\\n\\nGift: $' + (document.getElementById('giveAmount').textContent) + '\\nFrequency: ' + document.querySelector('input[name=&quot;freq&quot;]:checked').value + '\\nFund: ' + document.querySelector('input[name=&quot;fund&quot;]:checked').value);">
+
+            <!-- Frequency toggle -->
+            <span class="give-section-label">Gift type</span>
+            <div class="give-freq">
+              <input type="radio" name="freq" id="freq-once" value="One-time" checked>
+              <label for="freq-once">One-time gift</label>
+              <input type="radio" name="freq" id="freq-recurring" value="Recurring">
+              <label for="freq-recurring">Recurring</label>
+            </div>
+
+            <!-- Recurring sub-options (shows only when Recurring is selected) -->
+            <div class="give-recurring-period" id="recurringPeriod">
+              <input type="radio" name="period" id="p-weekly" value="Weekly">
+              <label for="p-weekly">Weekly</label>
+              <input type="radio" name="period" id="p-biweekly" value="Bi-weekly">
+              <label for="p-biweekly">Bi-weekly</label>
+              <input type="radio" name="period" id="p-monthly" value="Monthly" checked>
+              <label for="p-monthly">Monthly</label>
+            </div>
+
+            <!-- Fund selector -->
+            <span class="give-section-label">Where it goes</span>
+            <div class="give-funds">
+              <input type="radio" name="fund" id="fund-tithe" value="Tithe &amp; Offerings" checked>
+              <label for="fund-tithe">
+                <span class="fund-name">Tithe &amp; Offerings</span>
+                <span class="fund-desc">General fund</span>
+              </label>
+              <input type="radio" name="fund" id="fund-building" value="Building Fund">
+              <label for="fund-building">
+                <span class="fund-name">Building Fund</span>
+                <span class="fund-desc">Our church home</span>
+              </label>
+              <input type="radio" name="fund" id="fund-missions" value="Missions">
+              <label for="fund-missions">
+                <span class="fund-name">Missions</span>
+                <span class="fund-desc">Global outreach</span>
+              </label>
+              <input type="radio" name="fund" id="fund-outreach" value="Local Outreach">
+              <label for="fund-outreach">
+                <span class="fund-name">Local Outreach</span>
+                <span class="fund-desc">Our city</span>
+              </label>
+              <input type="radio" name="fund" id="fund-kids" value="Kids &amp; Youth">
+              <label for="fund-kids">
+                <span class="fund-name">Kids &amp; Youth</span>
+                <span class="fund-desc">Next generation</span>
+              </label>
+              <input type="radio" name="fund" id="fund-benevolence" value="Benevolence">
+              <label for="fund-benevolence">
+                <span class="fund-name">Benevolence</span>
+                <span class="fund-desc">Families in need</span>
+              </label>
+            </div>
+
+            <!-- Amount quick-pick -->
+            <span class="give-section-label">Choose an amount</span>
+            <div class="give-amounts">
+              <input type="radio" name="amount" id="amt-10" value="10">
+              <label for="amt-10">$10</label>
+              <input type="radio" name="amount" id="amt-25" value="25">
+              <label for="amt-25">$25</label>
+              <input type="radio" name="amount" id="amt-50" value="50" checked>
+              <label for="amt-50">$50</label>
+              <input type="radio" name="amount" id="amt-100" value="100">
+              <label for="amt-100">$100</label>
+              <input type="radio" name="amount" id="amt-250" value="250">
+              <label for="amt-250">$250</label>
+            </div>
+
+            <!-- Custom amount -->
+            <div class="give-custom">
+              <span class="dollar">$</span>
+              <input
+                type="number"
+                id="customAmount"
+                name="customAmount"
+                placeholder="Or enter custom amount"
+                min="1"
+                step="0.01"
+                inputmode="decimal">
+            </div>
+
+            <!-- Summary -->
+            <div class="give-summary">
+              <div>
+                <span class="give-summary-label">Your gift</span>
+                <span class="give-summary-value"><span class="ember">$</span><span id="giveAmount">50</span></span>
+              </div>
+              <div class="give-summary-meta" id="giveMeta">
+                One-time<br>to Tithe &amp; Offerings
+              </div>
+            </div>
+
+            <!-- Submit -->
+            <div class="give-submit">
+              <button type="submit" class="btn btn-primary">
+                <span>Continue to payment</span>
+                <svg class="arrow" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 13 L13 3 M6 3 H13 V10"/></svg>
+              </button>
+              <p class="give-fine-print">Secure payment. All gifts are tax-deductible.<br>You'll receive an emailed receipt within 24 hours.</p>
+            </div>
+
+          </form>
+
+          <!-- RIGHT: aside -->
+          <aside class="give-aside">
+
+            <div class="give-quote">
+              <p class="give-quote-text">"Each of you should give what you have decided in your heart to give, not reluctantly or under compulsion, for God loves a cheerful giver."</p>
+              <span class="give-quote-attr">— 2 Corinthians 9:7</span>
+            </div>
+
+            <div class="give-aside-card">
+              <h4>Where your gift goes</h4>
+              <p>Sundays. Kids ministry. Worship. Outreach to our city. Mission partners around the world. Every gift is a vote of faith in what God is doing here.</p>
+            </div>
+
+            <div class="give-aside-card">
+              <h4>Secure &amp; private</h4>
+              <p>All payments are processed through bank-grade encryption. We never store your card details.</p>
+            </div>
+
+            <div class="give-aside-card">
+              <h4>Tax-deductible</h4>
+              <p>New Season Christian Church is a registered 501(c)(3) non-profit. All donations are deductible to the fullest extent allowed by law.</p>
+              <p class="sub">Annual giving statements are emailed each January.</p>
+            </div>
+
+            <div class="give-aside-card">
+              <h4>Questions?</h4>
+              <p>Email <a href="mailto:giving@newseason.church" style="color: var(--ember); text-decoration: underline; text-underline-offset: 3px;">giving@newseason.church</a> and we'll get back to you within one business day.</p>
+            </div>
+
+          </aside>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- OTHER WAYS TO GIVE -->
+    <section class="section">
+      <div class="container">
+        <div class="section-head reveal">
+          <div class="head-left">
+            <span class="eyebrow">Other ways to give</span>
+            <h2 class="display-lg">Online is easiest. <em class="italic ember">But not the only way.</em></h2>
+          </div>
+          <p class="lead">If online giving isn't for you, here are three more ways to participate.</p>
+        </div>
+
+        <div class="other-ways reveal">
+          <div class="other-way">
+            <span class="other-way-num">01 / Text</span>
+            <h3>Text to give</h3>
+            <p>Text <strong style="color: var(--text);">GIVE</strong> to <strong style="color: var(--text);">(555) 123-4567</strong> from your phone. First-time setup is two minutes.</p>
+          </div>
+          <div class="other-way">
+            <span class="other-way-num">02 / In Person</span>
+            <h3>Give Sunday</h3>
+            <p>Giving boxes are at the back of the room every Sunday. Cash, check, or scan the QR code — your choice.</p>
+          </div>
+          <div class="other-way">
+            <span class="other-way-num">03 / Mail</span>
+            <h3>By mail</h3>
+            <p>Make checks payable to <strong style="color: var(--text);">New Season Christian Church</strong> and mail to the church office.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="section">
+      <div class="container">
+        <div class="connect-cta reveal">
+          <span class="eyebrow">Thank you</span>
+          <h2 class="display-lg">Every gift <em class="italic ember">matters.</em></h2>
+          <p class="lead">Whether it's $5 or $500 — you're part of the family that's making this work happen. We're grateful for you.</p>
+          <div class="connect-cta-actions">
+            <a href="connect.html" class="btn btn-primary">
+              <span>Plan a visit</span>
+              <svg class="arrow" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 13 L13 3 M6 3 H13 V10"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="container-wide">
+      <div class="footer-grid">
+        <div>
+          <div class="footer-brand">New <em>Season</em><br><span style="font-size: 0.55em; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-dim); font-family: var(--font-mono); display: inline-block; margin-top: 0.3rem;">Christian Church</span></div>
+          <p class="footer-blurb">New Season Christian Church is a family of people becoming who God made them to be — together, in the middle of real life.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Visit</h4>
+          <ul>
+            <li><a href="connect.html">Plan a Visit</a></li>
+            <li><a href="connect.html#location">Location</a></li>
+            <li><a href="connect.html">Service Times</a></li>
+            <li><a href="connect.html#prayer">Prayer Request</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Explore</h4>
+          <ul>
+            <li><a href="about.html">About</a></li>
+            <li><a href="ministries.html">Ministries</a></li>
+            <li><a href="watch.html">Watch Live</a></li>
+            <li><a href="give.html">Give</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Stay close</h4>
+          <ul>
+            <li><a href="#">Instagram</a></li>
+            <li><a href="https://www.youtube.com/@newseasonchristianchurch" target="_blank" rel="noopener">YouTube</a></li>
+            <li><a href="#">Facebook</a></li>
+            <li><a href="#">Spotify</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 New Season Christian Church. All rights reserved.</span>
+        <div class="footer-socials">
+          <a href="#" aria-label="Instagram"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg></a>
+          <a href="https://www.youtube.com/@newseasonchristianchurch" target="_blank" rel="noopener" aria-label="YouTube"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="5" width="20" height="14" rx="3"/><path d="M10 9 L15 12 L10 15 Z" fill="currentColor"/></svg></a>
+          <a href="#" aria-label="Facebook"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 8h3V4h-3a4 4 0 0 0-4 4v3H7v4h3v8h4v-8h3l1-4h-4V8a1 1 0 0 1 1-1Z" fill="currentColor" stroke="none"/></svg></a>
+          <a href="#" aria-label="Spotify"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M7 10c3-1 8-1 11 1 M7.5 13.5c2.5-1 6.5-1 9 0.5 M8 16.5c2-0.5 5-0.5 7 0.5"/></svg></a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+  <script>
+    // Give form interactivity — updates summary live and toggles recurring options
+    (function () {
+      const form = document.getElementById('giveForm');
+      if (!form) return;
+
+      const amountDisplay = document.getElementById('giveAmount');
+      const metaDisplay = document.getElementById('giveMeta');
+      const customInput = document.getElementById('customAmount');
+      const amountRadios = form.querySelectorAll('input[name="amount"]');
+      const freqRadios = form.querySelectorAll('input[name="freq"]');
+      const periodRadios = form.querySelectorAll('input[name="period"]');
+      const fundRadios = form.querySelectorAll('input[name="fund"]');
+
+      const update = () => {
+        // Amount
+        let amount;
+        if (customInput.value && parseFloat(customInput.value) > 0) {
+          amount = parseFloat(customInput.value).toFixed(2).replace(/\.00$/, '');
+        } else {
+          const checked = form.querySelector('input[name="amount"]:checked');
+          amount = checked ? checked.value : '0';
+        }
+        amountDisplay.textContent = amount;
+
+        // Meta line
+        const freq = form.querySelector('input[name="freq"]:checked').value;
+        const fund = form.querySelector('input[name="fund"]:checked').value;
+        let line1 = freq;
+        if (freq === 'Recurring') {
+          const period = form.querySelector('input[name="period"]:checked');
+          line1 = period ? period.value : 'Monthly';
+        }
+        metaDisplay.innerHTML = `${line1}<br>to ${fund}`;
+
+        // Toggle recurring period visibility
+        if (freq === 'Recurring') {
+          form.classList.add('is-recurring');
+        } else {
+          form.classList.remove('is-recurring');
+        }
+      };
+
+      // Clear custom when a preset is picked
+      amountRadios.forEach(r => r.addEventListener('change', () => {
+        customInput.value = '';
+        update();
+      }));
+
+      // Clear preset selection when custom is typed
+      customInput.addEventListener('input', () => {
+        if (customInput.value && parseFloat(customInput.value) > 0) {
+          amountRadios.forEach(r => r.checked = false);
+        }
+        update();
+      });
+
+      freqRadios.forEach(r => r.addEventListener('change', update));
+      periodRadios.forEach(r => r.addEventListener('change', update));
+      fundRadios.forEach(r => r.addEventListener('change', update));
+
+      update();
+    })();
+  </script>
+</body>
+</html>

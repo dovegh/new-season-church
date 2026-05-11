@@ -1,0 +1,536 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>New Season Christian Church — A new season is here.</title>
+  <meta name="description" content="New Season Church — a community for what's next. Sundays at 9 & 11am. Watch live, find your people, step in." />
+  <meta name="theme-color" content="#0a0908" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="icon" type="image/png" href="images/favicon.png">
+  <link rel="icon" type="image/png" sizes="64x64" href="images/favicon-64.png">
+  <script>
+    // Pre-paint theme application — runs before body renders to avoid flash
+    (function () {
+      try {
+        var saved = localStorage.getItem('nsc-theme');
+        if (saved === 'light') {
+          document.documentElement.setAttribute('data-theme', 'light');
+        }
+      } catch (e) {}
+    })();
+  </script>
+</head>
+<body class="loading">
+
+  <!-- ============== INTRO LOADER ============== -->
+  <div class="loader" role="status" aria-label="Loading New Season Christian Church">
+    <div class="loader-grain" aria-hidden="true"></div>
+    <div class="loader-glow" aria-hidden="true"></div>
+    <div class="loader-halo" aria-hidden="true"></div>
+    <div class="loader-horizon" aria-hidden="true"></div>
+    <div class="loader-logo" aria-hidden="true">
+      <img src="images/logo-full.png" alt="New Season Christian Church">
+    </div>
+    <div class="loader-tagline">A new season is here</div>
+    <div class="loader-progress" aria-hidden="true"></div>
+    <span class="loader-skip">Tap anywhere to continue</span>
+  </div>
+
+
+  <!-- ============== HEADER ============== -->
+  <header class="site-header">
+    <div class="container-wide">
+      <nav class="nav" aria-label="Primary">
+        <a class="brand" href="index.html" aria-label="New Season Christian Church — Home">
+          <span class="brand-mark" aria-hidden="true">
+            <img src="images/logo.png" alt="">
+          </span>
+          <span class="brand-text">
+            <span class="brand-line-1">New Season</span>
+            <span class="brand-line-2">Christian Church</span>
+          </span>
+        </a>
+        <ul class="nav-links">
+          <li><a href="index.html" class="active"><svg class="nav-icon ni-home" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path class="roof" d="M2 7 L8 2.5 L14 7"/>
+              <path class="walls" d="M3.5 6.5 V13.5 H12.5 V6.5"/>
+              <path class="door" d="M6.5 13.5 V9.5 H9.5 V13.5"/>
+            </svg><span>Home</span></a></li>
+          <li><a href="about.html"><svg class="nav-icon ni-about" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path class="spine" d="M8 4 V13"/>
+              <path class="page-l" d="M8 4 C6 3 4 3 2.5 3.5 V12 C4 11.5 6 11.5 8 12.5"/>
+              <path class="page-r" d="M8 4 C10 3 12 3 13.5 3.5 V12 C12 11.5 10 11.5 8 12.5"/>
+            </svg><span>About</span></a></li>
+          <li>
+            <a href="ministries.html">
+              <svg class="nav-icon ni-min" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+              <circle class="dot-l" cx="3.5" cy="9" r="1.8"/>
+              <circle class="dot-c" cx="8" cy="7" r="2.2"/>
+              <circle class="dot-r" cx="12.5" cy="9" r="1.8"/>
+            </svg>
+              <span>Ministries</span>
+              <svg class="nav-caret" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M2 4 L5 7 L8 4"/></svg>
+            </a>
+            <ul class="nav-dropdown" aria-label="Ministries menu">
+              <li><a href="ministries.html#kids"><span class="dd-num">01</span><span class="dd-label">Kids</span><span class="dd-meta">Ages 0–11</span></a></li>
+              <li><a href="ministries.html#youth"><span class="dd-num">02</span><span class="dd-label">Youth</span><span class="dd-meta">Ages 12–18</span></a></li>
+              <li><a href="ministries.html#young-adults"><span class="dd-num">03</span><span class="dd-label">Young Adults</span><span class="dd-meta">18–30</span></a></li>
+              <li><a href="ministries.html#women"><span class="dd-num">04</span><span class="dd-label">Women</span><span class="dd-meta">All ages</span></a></li>
+              <li><a href="ministries.html#men"><span class="dd-num">05</span><span class="dd-label">Men</span><span class="dd-meta">All ages</span></a></li>
+              <li><a href="ministries.html#outreach"><span class="dd-num">06</span><span class="dd-label">Outreach</span><span class="dd-meta">City + World</span></a></li>
+              <li class="dd-divider" aria-hidden="true"></li>
+              <li><a class="dd-footer" href="ministries.html"><span class="dd-label">All ministries</span><span>→</span></a></li>
+            </ul>
+          </li>
+          <li><a href="watch.html"><svg class="nav-icon ni-watch" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle class="ring" cx="8" cy="8" r="6"/>
+              <path class="play" d="M6.5 5.5 L11 8 L6.5 10.5 Z" fill="currentColor"/>
+            </svg><span>Watch Live</span></a></li>
+          <li><a href="give.html"><svg class="nav-icon ni-give" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path class="give-heart" d="M8 13.5 C 3 10 1.5 7.5 1.5 5.5 A 3 3 0 0 1 8 4.5 A 3 3 0 0 1 14.5 5.5 C 14.5 7.5 13 10 8 13.5 Z"/></svg><span>Give</span></a></li>
+          <li><a href="connect.html"><svg class="nav-icon ni-connect" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path class="arrow-tail" d="M3 13 L13 3"/>
+              <path class="arrow-head" d="M6 3 H13 V10"/>
+            </svg><span>Connect</span></a></li>
+        </ul>
+        <div class="nav-cta">
+          <button class="theme-toggle" type="button" aria-label="Toggle theme" id="themeToggle">
+            <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+            </svg>
+            <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="4"/>
+              <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
+            </svg>
+          </button>
+          <a href="connect.html" class="btn btn-primary">
+            <span>Plan a Visit</span>
+            <svg class="arrow" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 13 L13 3 M6 3 H13 V10"/></svg>
+          </a>
+          <button class="nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu">
+            <span></span>
+          </button>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <div class="mobile-menu" id="mobileMenu" aria-hidden="true">
+    <a href="index.html">Home</a>
+    <a href="about.html">About</a>
+    <a href="ministries.html">Ministries</a>
+    <a href="watch.html">Watch Live</a>
+    <a href="give.html">Give</a>
+    <a href="connect.html">Connect</a>
+    <div class="mm-section">
+      <div class="mm-section-label">Our Ministries</div>
+      <div class="mm-sub">
+        <a href="ministries.html#kids"><span>Kids</span><span class="mm-meta">Ages 0–11</span></a>
+        <a href="ministries.html#youth"><span>Youth</span><span class="mm-meta">12–18</span></a>
+        <a href="ministries.html#young-adults"><span>Young Adults</span><span class="mm-meta">18–30</span></a>
+        <a href="ministries.html#women"><span>Women</span><span class="mm-meta">All ages</span></a>
+        <a href="ministries.html#men"><span>Men</span><span class="mm-meta">All ages</span></a>
+        <a href="ministries.html#outreach"><span>Outreach</span><span class="mm-meta">City + World</span></a>
+      </div>
+    </div>
+  </div>
+
+  <main>
+
+    <!-- ============== HERO — FULL-WIDTH CAROUSEL ============== -->
+    <section class="hero">
+      <div class="hero-bg"></div>
+      <div class="hero-grain"></div>
+
+      <div class="hero-fullbleed">
+        <div class="hero-carousel" role="region" aria-label="Sermon series carousel" aria-roledescription="carousel">
+          <div class="carousel-counter">
+            <span class="live-dot" aria-hidden="true"></span>
+            <span><span class="carousel-counter-current">01</span> / 05</span>
+          </div>
+          <div class="carousel-dots" role="tablist" aria-label="Choose series">
+            <button class="carousel-dot active" data-idx="0" aria-label="Series 1"></button>
+            <button class="carousel-dot" data-idx="1" aria-label="Series 2"></button>
+            <button class="carousel-dot" data-idx="2" aria-label="Series 3"></button>
+            <button class="carousel-dot" data-idx="3" aria-label="Series 4"></button>
+            <button class="carousel-dot" data-idx="4" aria-label="Series 5"></button>
+          </div>
+          <article class="hero-slide active" style="background-image: url('images/series/threshold.jpg');">
+            <div class="hero-slide-inner">
+              <div class="hero-slide-meta">
+                <span class="eyebrow">Current series · Week 03</span>
+                <span class="tag">Now playing</span>
+              </div>
+              <h1 class="hero-slide-title">Threshold <em>— a new season.</em></h1>
+              <p class="hero-slide-sub">Four weeks on the in-between. The space between the prayer and the answer, the wilderness and the promise.</p>
+              <div class="hero-slide-actions">
+                <a href="watch.html" class="btn btn-primary">
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor" aria-hidden="true"><path d="M3 1.5 L12 7 L3 12.5 Z"/></svg>
+                  <span>Watch latest</span>
+                </a>
+                <a href="watch.html#archive" class="btn btn-ghost">
+                  <span>All messages</span>
+                  <svg class="arrow" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 13 L13 3 M6 3 H13 V10"/></svg>
+                </a>
+              </div>
+            </div>
+          </article>
+          <article class="hero-slide" style="background-image: url('images/series/beloved.jpg');">
+            <div class="hero-slide-inner">
+              <div class="hero-slide-meta"><span class="eyebrow">Series · 5 messages</span></div>
+              <h2 class="hero-slide-title">Beloved <em>— you were named.</em></h2>
+              <p class="hero-slide-sub">A series on identity, belonging, and what it means to be loved before you ever earned it.</p>
+              <div class="hero-slide-actions">
+                <a href="watch.html" class="btn btn-primary"><svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor" aria-hidden="true"><path d="M3 1.5 L12 7 L3 12.5 Z"/></svg><span>Watch series</span></a>
+              </div>
+            </div>
+          </article>
+          <article class="hero-slide" style="background-image: url('images/series/guiding-lights.jpg');">
+            <div class="hero-slide-inner">
+              <div class="hero-slide-meta"><span class="eyebrow">Series · 6 messages</span></div>
+              <h2 class="hero-slide-title">Guiding <em>Lights.</em></h2>
+              <p class="hero-slide-sub">Six characters in scripture who held the line when the night got long.</p>
+              <div class="hero-slide-actions">
+                <a href="watch.html" class="btn btn-primary"><svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor" aria-hidden="true"><path d="M3 1.5 L12 7 L3 12.5 Z"/></svg><span>Watch series</span></a>
+              </div>
+            </div>
+          </article>
+          <article class="hero-slide" style="background-image: url('images/series/mission-forward.jpg');">
+            <div class="hero-slide-inner">
+              <div class="hero-slide-meta"><span class="eyebrow">Series · 8 messages</span></div>
+              <h2 class="hero-slide-title">Mission <em>Forward.</em></h2>
+              <p class="hero-slide-sub">God's heart is for the nations. An eight-part series on local presence and global reach.</p>
+              <div class="hero-slide-actions">
+                <a href="watch.html" class="btn btn-primary"><svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor" aria-hidden="true"><path d="M3 1.5 L12 7 L3 12.5 Z"/></svg><span>Watch series</span></a>
+              </div>
+            </div>
+          </article>
+          <article class="hero-slide" style="background-image: url('images/series/he-is-risen.jpg');">
+            <div class="hero-slide-inner">
+              <div class="hero-slide-meta"><span class="eyebrow">Easter Sunday · Special</span></div>
+              <h2 class="hero-slide-title">He is <em>risen.</em></h2>
+              <p class="hero-slide-sub">The single message that started everything. A standalone teaching from our Easter gathering.</p>
+              <div class="hero-slide-actions">
+                <a href="watch.html" class="btn btn-primary"><svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor" aria-hidden="true"><path d="M3 1.5 L12 7 L3 12.5 Z"/></svg><span>Watch message</span></a>
+              </div>
+            </div>
+          </article>
+          <div class="carousel-controls">
+            <button class="carousel-btn carousel-prev" aria-label="Previous series">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M10 3 L4 8 L10 13"/></svg>
+            </button>
+            <button class="carousel-btn carousel-next" aria-label="Next series">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 3 L12 8 L6 13"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="container-wide">
+        <!-- Service-times strip just below the hero -->
+        <div style="margin-top: clamp(1rem, 2vw, 1.6rem);">
+          <div class="times-strip">
+            <div class="times-strip-cell">
+              <span class="label">Sunday · Morning</span>
+              <span class="value">9:00 AM</span>
+            </div>
+            <div class="times-strip-cell">
+              <span class="label">Sunday · Late</span>
+              <span class="value">11:00 AM</span>
+            </div>
+            <div class="times-strip-cell">
+              <span class="label">Wednesday · Prayer</span>
+              <span class="value">7:00 PM</span>
+            </div>
+            <div class="times-strip-cell">
+              <span class="label">Location</span>
+              <span class="value">Main Campus</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ============== MARQUEE ============== -->
+    <div class="marquee" aria-hidden="true">
+      <div class="marquee-track">
+        <span>A New Season</span>
+        <span>Welcome Home</span>
+        <span>You Belong Here</span>
+        <span>A New Season</span>
+        <span>Welcome Home</span>
+        <span>You Belong Here</span>
+      </div>
+    </div>
+
+    <!-- ============== WELCOME ============== -->
+    <section class="section" id="welcome">
+      <div class="container">
+        <div class="welcome">
+          <div class="welcome-text reveal">
+            <span class="eyebrow">Welcome to New Season</span>
+            <h2 class="display-lg">A church for <em class="italic ember">what's next</em>.</h2>
+            <p class="lead">We're a community of people in the middle of becoming. Whatever season you're walking through — beginning, ending, waiting, healing — there's a place for you here. Come as you are. Stay because you're seen.</p>
+            <dl class="welcome-meta">
+              <div>
+                <dt>Founded</dt>
+                <dd>2018</dd>
+              </div>
+              <div>
+                <dt>Lead Pastor</dt>
+                <dd>Pastor Daniel Reyes</dd>
+              </div>
+              <div>
+                <dt>Gatherings</dt>
+                <dd>Sundays · 9 &amp; 11 AM</dd>
+              </div>
+              <div>
+                <dt>Family</dt>
+                <dd>Growing every week</dd>
+              </div>
+            </dl>
+            <div style="margin-top: 1rem;">
+              <a href="about.html" class="btn btn-ghost">
+                <span>Read our story</span>
+                <svg class="arrow" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 13 L13 3 M6 3 H13 V10"/></svg>
+              </a>
+            </div>
+          </div>
+          <div class="photo-grid reveal" aria-label="Photo gallery">
+            <div class="photo-slot s1" style="background-image: url('images/welcome/worship.jpg'); background-size: cover; background-position: center;"></div>
+            <div class="photo-slot s2" style="background-image: url('images/welcome/community.jpg'); background-size: cover; background-position: center;"></div>
+            <div class="photo-slot s3" style="background-image: url('images/welcome/prayer.jpg'); background-size: cover; background-position: center;"></div>
+            <div class="photo-slot s4" style="background-image: url('images/welcome/kids.jpg'); background-size: cover; background-position: center;"></div>
+            <div class="photo-slot s5" style="background-image: url('images/welcome/outreach.jpg'); background-size: cover; background-position: center;"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============== GALLERY MOSAIC (Iglesia Tabernaculo style) ============== -->
+    <section class="section" id="gallery">
+      <div class="container">
+        <div class="section-head reveal">
+          <div class="head-left">
+            <span class="eyebrow">Inside the room</span>
+            <h2 class="display-lg">A church <em class="italic ember">on Tuesday nights.</em></h2>
+          </div>
+          <p class="lead">Worship. Tears. Laughter. The Word opened. Hands raised. This is what a midweek service looks like — and you're invited.</p>
+        </div>
+
+        <div class="gallery-mosaic reveal" aria-label="Gallery">
+          <div class="mosaic-cell is-text mc-1x1"><span class="mosaic-text">Word <em>of God</em></span></div>
+          <div class="mosaic-cell is-photo mc-1x1" style="background-image: url('images/gallery/worship-01.jpg');"><span class="mosaic-cell-label">Worship</span></div>
+          <div class="mosaic-cell is-text mc-1x1"><span class="mosaic-text">Tuesday Nights</span></div>
+          <div class="mosaic-cell is-badge mc-1x1"><span class="mosaic-badge"><span>N</span><span>S</span><span>C</span></span></div>
+          <div class="mosaic-cell is-photo mc-1x1" style="background-image: url('images/gallery/prayer-01.jpg');"><span class="mosaic-cell-label">Prayer</span></div>
+          <div class="mosaic-cell is-photo mc-1x1" style="background-image: url('images/gallery/community-01.jpg');"><span class="mosaic-cell-label">Community</span></div>
+          <div class="mosaic-cell is-photo mc-1x1" style="background-image: url('images/gallery/preach-01.jpg');"><span class="mosaic-cell-label">The Word</span></div>
+          <div class="mosaic-cell is-photo mc-1x1" style="background-image: url('images/gallery/baptism-01.jpg');"><span class="mosaic-cell-label">Baptisms</span></div>
+          <div class="mosaic-cell is-text mc-1x1"><span class="mosaic-text">For <em>you.</em></span></div>
+        </div>
+
+        <div style="margin-top: 2rem; display: flex; justify-content: center;">
+          <a href="connect.html" class="btn btn-ghost">
+            <span>Come visit us</span>
+            <svg class="arrow" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 13 L13 3 M6 3 H13 V10"/></svg>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============== MINISTRIES ============== -->
+    <section class="section" id="ministries">
+      <div class="container">
+        <div class="section-head reveal">
+          <div class="head-left">
+            <span class="eyebrow">Find your people</span>
+            <h2 class="display-lg">Six ministries.<br><em class="italic ember">One family.</em></h2>
+          </div>
+          <p class="lead">From the youngest in our nursery to the most seasoned saints — there is a table set for you. Step into a space that's already been waiting.</p>
+        </div>
+
+        <div class="ministries-grid reveal">
+          <a class="ministry" href="ministries.html#kids">
+            <span class="ministry-num">01 / Kids</span>
+            <h3 class="ministry-title">Kids <span class="ministry-arrow">↗</span></h3>
+            <p class="ministry-desc">A safe, joy-filled space where children meet Jesus through play, story, and song.</p>
+            <div class="ministry-meta"><span>Ages 0–11</span><span>Sundays</span></div>
+          </a>
+          <a class="ministry" href="ministries.html#youth">
+            <span class="ministry-num">02 / Youth</span>
+            <h3 class="ministry-title">Youth <span class="ministry-arrow">↗</span></h3>
+            <p class="ministry-desc">Middle and high schoolers becoming who God created them to be — together.</p>
+            <div class="ministry-meta"><span>Ages 12–18</span><span>Wednesdays</span></div>
+          </a>
+          <a class="ministry" href="ministries.html#young-adults">
+            <span class="ministry-num">03 / Young Adults</span>
+            <h3 class="ministry-title">Young Adults <span class="ministry-arrow">↗</span></h3>
+            <p class="ministry-desc">College students and twenty-somethings figuring out faith, work, and what's next.</p>
+            <div class="ministry-meta"><span>18–30</span><span>Thursdays</span></div>
+          </a>
+          <a class="ministry" href="ministries.html#women">
+            <span class="ministry-num">04 / Women</span>
+            <h3 class="ministry-title">Women <span class="ministry-arrow">↗</span></h3>
+            <p class="ministry-desc">Sisters walking in courage, calling, and community across every chapter of life.</p>
+            <div class="ministry-meta"><span>All ages</span><span>Monthly</span></div>
+          </a>
+          <a class="ministry" href="ministries.html#men">
+            <span class="ministry-num">05 / Men</span>
+            <h3 class="ministry-title">Men <span class="ministry-arrow">↗</span></h3>
+            <p class="ministry-desc">Brothers building lives marked by honor, presence, and faithful follow-through.</p>
+            <div class="ministry-meta"><span>All ages</span><span>Saturdays</span></div>
+          </a>
+          <a class="ministry" href="ministries.html#outreach">
+            <span class="ministry-num">06 / Outreach</span>
+            <h3 class="ministry-title">Outreach <span class="ministry-arrow">↗</span></h3>
+            <p class="ministry-desc">Serving our city — neighbors, the unhoused, schools, and the nations beyond.</p>
+            <div class="ministry-meta"><span>Locally + Globally</span><span>Year-round</span></div>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============== RECENT MESSAGES ============== -->
+    <section class="section" id="recent">
+      <div class="container">
+        <div class="section-head reveal">
+          <div class="head-left">
+            <span class="eyebrow">Recent messages</span>
+            <h2 class="display-lg">Catch up.<br><em class="italic gold">Then go further.</em></h2>
+          </div>
+          <p class="lead">Miss a Sunday? Every message is here for you — sermons, study notes, and conversation starters for your week.</p>
+        </div>
+
+        <div class="sermons-list reveal">
+          <a class="sermon" href="watch.html">
+            <span class="sermon-num">01</span>
+            <div class="sermon-title">
+              <h3>The Door You Didn't Choose</h3>
+              <span class="pastor">Pastor Daniel Reyes · Threshold pt. 3</span>
+            </div>
+            <span class="sermon-duration">38:14</span>
+            <span class="sermon-play" aria-label="Play">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"><path d="M3 1.5 L10 6 L3 10.5 Z"/></svg>
+            </span>
+          </a>
+          <a class="sermon" href="watch.html">
+            <span class="sermon-num">02</span>
+            <div class="sermon-title">
+              <h3>What the Waiting is For</h3>
+              <span class="pastor">Pastor Daniel Reyes · Threshold pt. 2</span>
+            </div>
+            <span class="sermon-duration">42:51</span>
+            <span class="sermon-play" aria-label="Play">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"><path d="M3 1.5 L10 6 L3 10.5 Z"/></svg>
+            </span>
+          </a>
+          <a class="sermon" href="watch.html">
+            <span class="sermon-num">03</span>
+            <div class="sermon-title">
+              <h3>Between Two Promises</h3>
+              <span class="pastor">Pastor Daniel Reyes · Threshold pt. 1</span>
+            </div>
+            <span class="sermon-duration">36:09</span>
+            <span class="sermon-play" aria-label="Play">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"><path d="M3 1.5 L10 6 L3 10.5 Z"/></svg>
+            </span>
+          </a>
+          <a class="sermon" href="watch.html">
+            <span class="sermon-num">04</span>
+            <div class="sermon-title">
+              <h3>House of the Living God</h3>
+              <span class="pastor">Pastor Sarah Okafor · Standalone</span>
+            </div>
+            <span class="sermon-duration">29:42</span>
+            <span class="sermon-play" aria-label="Play">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"><path d="M3 1.5 L10 6 L3 10.5 Z"/></svg>
+            </span>
+          </a>
+        </div>
+
+        <div style="margin-top: 2.2rem; display: flex; justify-content: center;">
+          <a href="watch.html" class="btn btn-ghost">
+            <span>All messages</span>
+            <svg class="arrow" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 13 L13 3 M6 3 H13 V10"/></svg>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============== CLOSING CTA ============== -->
+    <section class="section">
+      <div class="container">
+        <div class="connect-cta reveal">
+          <span class="eyebrow">New here?</span>
+          <h2 class="display-xl">Don't come alone.<br><em class="italic ember">Come anyway.</em></h2>
+          <p class="lead">Whatever you're carrying, we'd love to meet you this Sunday. Reserve a seat, tell us you're coming, and we'll make sure someone is looking for you when you walk in.</p>
+          <div class="connect-cta-actions">
+            <a href="connect.html" class="btn btn-primary">
+              <span>Plan your visit</span>
+              <svg class="arrow" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 13 L13 3 M6 3 H13 V10"/></svg>
+            </a>
+            <a href="connect.html#prayer" class="btn btn-ghost">
+              <span>Request prayer</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ============== FOOTER ============== -->
+  <footer class="site-footer">
+    <div class="container-wide">
+      <div class="footer-grid">
+        <div>
+          <div class="footer-brand">New <em>Season</em><br><span style="font-size: 0.55em; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-dim); font-family: var(--font-mono); display: inline-block; margin-top: 0.3rem;">Christian Church</span></div>
+          <p class="footer-blurb">New Season Christian Church is a family of people becoming who God made them to be — together, in the middle of real life.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Visit</h4>
+          <ul>
+            <li><a href="connect.html">Plan a Visit</a></li>
+            <li><a href="connect.html#location">Location</a></li>
+            <li><a href="connect.html">Service Times</a></li>
+            <li><a href="connect.html#prayer">Prayer Request</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Explore</h4>
+          <ul>
+            <li><a href="about.html">About</a></li>
+            <li><a href="ministries.html">Ministries</a></li>
+            <li><a href="watch.html">Watch Live</a></li>
+            <li><a href="give.html">Give</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Stay close</h4>
+          <ul>
+            <li><a href="#">Instagram</a></li>
+            <li><a href="https://www.youtube.com/@newseasonchristianchurch" target="_blank" rel="noopener">YouTube</a></li>
+            <li><a href="#">Facebook</a></li>
+            <li><a href="#">Spotify</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 New Season Christian Church. All rights reserved.</span>
+        <div class="footer-socials">
+          <a href="#" aria-label="Instagram"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg></a>
+          <a href="https://www.youtube.com/@newseasonchristianchurch" target="_blank" rel="noopener" aria-label="YouTube"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="5" width="20" height="14" rx="3"/><path d="M10 9 L15 12 L10 15 Z" fill="currentColor"/></svg></a>
+          <a href="#" aria-label="Facebook"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 8h3V4h-3a4 4 0 0 0-4 4v3H7v4h3v8h4v-8h3l1-4h-4V8a1 1 0 0 1 1-1Z" fill="currentColor" stroke="none"/></svg></a>
+          <a href="#" aria-label="Spotify"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M7 10c3-1 8-1 11 1 M7.5 13.5c2.5-1 6.5-1 9 0.5 M8 16.5c2-0.5 5-0.5 7 0.5"/></svg></a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

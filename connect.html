@@ -1,0 +1,465 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Connect — New Season Christian Church</title>
+  <meta name="description" content="Plan your visit, request prayer, find our location, or give. We're glad you're here." />
+  <meta name="theme-color" content="#0a0908" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="icon" type="image/png" href="images/favicon.png">
+  <link rel="icon" type="image/png" sizes="64x64" href="images/favicon-64.png">
+  <style>
+    .map-card {
+      aspect-ratio: 4/3;
+      border-radius: var(--radius-lg);
+      background:
+        radial-gradient(circle at 50% 50%, rgba(196, 74, 69, 0.2), transparent 40%),
+        linear-gradient(135deg, var(--bg-elev), var(--bg-elev-2));
+      border: 1px solid var(--line);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .map-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+      background-size: 32px 32px;
+    }
+    .map-pin {
+      width: 56px; height: 56px;
+      border-radius: 50%;
+      background: var(--ember);
+      color: var(--bg);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      box-shadow: 0 0 0 10px rgba(196,74,69,0.15), 0 0 0 24px rgba(196,74,69,0.07);
+      animation: pulse 2.4s var(--ease-out) infinite;
+    }
+    .give-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.2rem;
+    }
+    @media (max-width: 800px) { .give-grid { grid-template-columns: 1fr; } }
+    .give-card {
+      padding: 2rem 1.6rem;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--bg-elev);
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+      transition: border-color 0.3s, background 0.3s;
+    }
+    .give-card:hover { border-color: var(--ember); background: var(--bg-elev-2); }
+    .give-card h3 {
+      font-family: var(--font-display);
+      font-weight: 400;
+      font-size: 1.5rem;
+      margin: 0;
+    }
+    .give-num {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.15em;
+      color: var(--ember);
+    }
+  </style>
+  <script>
+    // Pre-paint theme application — runs before body renders to avoid flash
+    (function () {
+      try {
+        var saved = localStorage.getItem('nsc-theme');
+        if (saved === 'light') {
+          document.documentElement.setAttribute('data-theme', 'light');
+        }
+      } catch (e) {}
+    })();
+  </script>
+</head>
+<body class="loading">
+
+  <!-- ============== INTRO LOADER ============== -->
+  <div class="loader" role="status" aria-label="Loading New Season Christian Church">
+    <div class="loader-grain" aria-hidden="true"></div>
+    <div class="loader-glow" aria-hidden="true"></div>
+    <div class="loader-halo" aria-hidden="true"></div>
+    <div class="loader-horizon" aria-hidden="true"></div>
+    <div class="loader-logo" aria-hidden="true">
+      <img src="images/logo-full.png" alt="New Season Christian Church">
+    </div>
+    <div class="loader-tagline">A new season is here</div>
+    <div class="loader-progress" aria-hidden="true"></div>
+    <span class="loader-skip">Tap anywhere to continue</span>
+  </div>
+
+
+  <header class="site-header">
+    <div class="container-wide">
+      <nav class="nav" aria-label="Primary">
+        <a class="brand" href="index.html" aria-label="New Season Christian Church — Home">
+          <span class="brand-mark" aria-hidden="true">
+            <img src="images/logo.png" alt="">
+          </span>
+          <span class="brand-text">
+            <span class="brand-line-1">New Season</span>
+            <span class="brand-line-2">Christian Church</span>
+          </span>
+        </a>
+        <ul class="nav-links">
+          <li><a href="index.html"><svg class="nav-icon ni-home" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path class="roof" d="M2 7 L8 2.5 L14 7"/>
+              <path class="walls" d="M3.5 6.5 V13.5 H12.5 V6.5"/>
+              <path class="door" d="M6.5 13.5 V9.5 H9.5 V13.5"/>
+            </svg><span>Home</span></a></li>
+          <li><a href="about.html"><svg class="nav-icon ni-about" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path class="spine" d="M8 4 V13"/>
+              <path class="page-l" d="M8 4 C6 3 4 3 2.5 3.5 V12 C4 11.5 6 11.5 8 12.5"/>
+              <path class="page-r" d="M8 4 C10 3 12 3 13.5 3.5 V12 C12 11.5 10 11.5 8 12.5"/>
+            </svg><span>About</span></a></li>
+          <li>
+            <a href="ministries.html">
+              <svg class="nav-icon ni-min" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+              <circle class="dot-l" cx="3.5" cy="9" r="1.8"/>
+              <circle class="dot-c" cx="8" cy="7" r="2.2"/>
+              <circle class="dot-r" cx="12.5" cy="9" r="1.8"/>
+            </svg>
+              <span>Ministries</span>
+              <svg class="nav-caret" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M2 4 L5 7 L8 4"/></svg>
+            </a>
+            <ul class="nav-dropdown" aria-label="Ministries menu">
+              <li><a href="ministries.html#kids"><span class="dd-num">01</span><span class="dd-label">Kids</span><span class="dd-meta">Ages 0–11</span></a></li>
+              <li><a href="ministries.html#youth"><span class="dd-num">02</span><span class="dd-label">Youth</span><span class="dd-meta">Ages 12–18</span></a></li>
+              <li><a href="ministries.html#young-adults"><span class="dd-num">03</span><span class="dd-label">Young Adults</span><span class="dd-meta">18–30</span></a></li>
+              <li><a href="ministries.html#women"><span class="dd-num">04</span><span class="dd-label">Women</span><span class="dd-meta">All ages</span></a></li>
+              <li><a href="ministries.html#men"><span class="dd-num">05</span><span class="dd-label">Men</span><span class="dd-meta">All ages</span></a></li>
+              <li><a href="ministries.html#outreach"><span class="dd-num">06</span><span class="dd-label">Outreach</span><span class="dd-meta">City + World</span></a></li>
+              <li class="dd-divider" aria-hidden="true"></li>
+              <li><a class="dd-footer" href="ministries.html"><span class="dd-label">All ministries</span><span>→</span></a></li>
+            </ul>
+          </li>
+          <li><a href="watch.html"><svg class="nav-icon ni-watch" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle class="ring" cx="8" cy="8" r="6"/>
+              <path class="play" d="M6.5 5.5 L11 8 L6.5 10.5 Z" fill="currentColor"/>
+            </svg><span>Watch Live</span></a></li>
+          <li><a href="give.html"><svg class="nav-icon ni-give" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path class="give-heart" d="M8 13.5 C 3 10 1.5 7.5 1.5 5.5 A 3 3 0 0 1 8 4.5 A 3 3 0 0 1 14.5 5.5 C 14.5 7.5 13 10 8 13.5 Z"/></svg><span>Give</span></a></li>
+          <li><a href="connect.html" class="active"><svg class="nav-icon ni-connect" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path class="arrow-tail" d="M3 13 L13 3"/>
+              <path class="arrow-head" d="M6 3 H13 V10"/>
+            </svg><span>Connect</span></a></li>
+        </ul>
+        <div class="nav-cta">
+          <button class="theme-toggle" type="button" aria-label="Toggle theme" id="themeToggle">
+            <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+            </svg>
+            <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="4"/>
+              <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
+            </svg>
+          </button>
+          <a href="connect.html" class="btn btn-primary">
+            <span>Plan a Visit</span>
+            <svg class="arrow" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 13 L13 3 M6 3 H13 V10"/></svg>
+          </a>
+          <button class="nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu">
+            <span></span>
+          </button>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <div class="mobile-menu" id="mobileMenu" aria-hidden="true">
+    <a href="index.html">Home</a>
+    <a href="about.html">About</a>
+    <a href="ministries.html">Ministries</a>
+    <a href="watch.html">Watch Live</a>
+    <a href="give.html">Give</a>
+    <a href="connect.html">Connect</a>
+    <div class="mm-section">
+      <div class="mm-section-label">Our Ministries</div>
+      <div class="mm-sub">
+        <a href="ministries.html#kids"><span>Kids</span><span class="mm-meta">Ages 0–11</span></a>
+        <a href="ministries.html#youth"><span>Youth</span><span class="mm-meta">12–18</span></a>
+        <a href="ministries.html#young-adults"><span>Young Adults</span><span class="mm-meta">18–30</span></a>
+        <a href="ministries.html#women"><span>Women</span><span class="mm-meta">All ages</span></a>
+        <a href="ministries.html#men"><span>Men</span><span class="mm-meta">All ages</span></a>
+        <a href="ministries.html#outreach"><span>Outreach</span><span class="mm-meta">City + World</span></a>
+      </div>
+    </div>
+  </div>
+
+  <main>
+
+    <section class="page-hero">
+      <div class="hero-grain"></div>
+      <div class="container">
+        <span class="eyebrow">Connect</span>
+        <h1 class="display-xl" style="margin-top:1.4rem;">We've been <em class="italic ember">looking for you.</em></h1>
+        <p class="lead" style="margin-top: 1.8rem;">Plan your first visit, ask for prayer, find our doors, or take a step toward generosity. Whatever brought you here — we're glad you came.</p>
+      </div>
+    </section>
+
+    <!-- PLAN A VISIT -->
+    <section class="section" id="visit">
+      <div class="container">
+        <div class="connect-grid">
+          <div class="reveal">
+            <span class="eyebrow">Plan a Visit</span>
+            <h2 class="display-lg" style="margin: 1rem 0 1.4rem;">Tell us you're <em class="italic ember">coming.</em></h2>
+            <p class="lead" style="margin-bottom: 2rem;">Fill this out and we'll save a seat, get your kids pre-registered, and make sure a real human is looking for you at the door.</p>
+
+            <form class="form" onsubmit="event.preventDefault(); alert('Thank you — we cannot wait to meet you. (Connect this form to your backend or a service like Formspree.)');">
+              <div class="field">
+                <label for="name">Your name</label>
+                <input type="text" id="name" placeholder="First and last" required>
+              </div>
+              <div class="field">
+                <label for="email">Email</label>
+                <input type="email" id="email" placeholder="you@example.com" required>
+              </div>
+              <div class="field">
+                <label for="service">Which service?</label>
+                <select id="service">
+                  <option>Sunday · 9:00 AM</option>
+                  <option>Sunday · 11:00 AM</option>
+                  <option>Wednesday · Prayer · 7:00 PM</option>
+                  <option>Not sure yet</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="kids">Bringing kids?</label>
+                <select id="kids">
+                  <option>No kids this time</option>
+                  <option>Yes — 1 child</option>
+                  <option>Yes — 2 children</option>
+                  <option>Yes — 3+ children</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="note">Anything we should know? (optional)</label>
+                <textarea id="note" placeholder="Allergies, accessibility needs, a story, a question..."></textarea>
+              </div>
+              <div>
+                <button type="submit" class="btn btn-primary">
+                  <span>Save my seat</span>
+                  <svg class="arrow" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 13 L13 3 M6 3 H13 V10"/></svg>
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <div class="info-cards reveal">
+            <div class="info-card">
+              <h4>Service Times</h4>
+              <p>Sundays · 9:00 AM &amp; 11:00 AM</p>
+              <p class="sub">Wednesdays · Prayer Gathering · 7:00 PM</p>
+            </div>
+            <div class="info-card" id="location">
+              <h4>Location</h4>
+              <p>1240 Hope Avenue<br>Suite A · Main Campus</p>
+              <p class="sub">Free parking on-site. Accessible entrances on the south side.</p>
+            </div>
+            <div class="info-card">
+              <h4>What to Expect</h4>
+              <p>Come as you are. Coffee in the lobby. Worship for ~25 minutes, a message for ~35, prayer at the end. We're done in about 75 minutes.</p>
+            </div>
+            <div class="info-card">
+              <h4>For Your Kids</h4>
+              <p>Secure check-in, background-checked volunteers, and a space your kids will not want to leave.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MAP -->
+    <section class="section">
+      <div class="container">
+        <div class="section-head reveal">
+          <div class="head-left">
+            <span class="eyebrow">Find us</span>
+            <h2 class="display-lg">Easy to find. <em class="italic gold">Hard to leave.</em></h2>
+          </div>
+          <p class="lead">Free parking on-site. Two blocks from the bus line. Just look for the open doors and the welcome team in the orange.</p>
+        </div>
+        <div class="map-card reveal" aria-label="Map" style="background-image: linear-gradient(135deg, rgba(10, 9, 8, 0.65), rgba(10, 9, 8, 0.85)), url('https://images.unsplash.com/photo-1519501025264-65ba15a82390?w=1600&h=900&q=85&auto=format&fit=crop'); background-size: cover; background-position: center;">
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 1.2rem; position: relative; z-index: 1;">
+            <span class="map-pin">
+              <svg width="22" height="22" viewBox="0 0 22 22" fill="currentColor"><path d="M11 1.5C7 1.5 4 4.5 4 8.5c0 5 7 12 7 12s7-7 7-12c0-4-3-7-7-7Zm0 9.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5Z"/></svg>
+            </span>
+            <p style="font-family: var(--font-mono); font-size: 0.85rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-dim); margin: 0;">1240 Hope Avenue · Main Campus</p>
+            <a href="#" class="btn btn-ghost">
+              <span>Open in Maps</span>
+              <svg class="arrow" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 13 L13 3 M6 3 H13 V10"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRAYER -->
+    <section class="section" id="prayer">
+      <div class="container">
+        <div class="connect-grid">
+          <div class="reveal">
+            <span class="eyebrow">Prayer Request</span>
+            <h2 class="display-lg" style="margin: 1rem 0 1.4rem;">Let us pray <em class="italic ember">with you.</em></h2>
+            <p class="lead" style="margin-bottom: 2rem;">Our pastors and prayer team read every request. Nothing is too small. Nothing is too heavy. Send it our way.</p>
+
+            <form class="form" onsubmit="event.preventDefault(); alert('Thank you — we are praying. (Connect this to your backend when ready.)');">
+              <div class="field">
+                <label for="pname">Your name (or anonymous)</label>
+                <input type="text" id="pname" placeholder="Optional">
+              </div>
+              <div class="field">
+                <label for="pemail">Email (if you want a follow-up)</label>
+                <input type="email" id="pemail" placeholder="you@example.com">
+              </div>
+              <div class="field">
+                <label for="prayer">Your request</label>
+                <textarea id="prayer" placeholder="Share what's on your heart..." required></textarea>
+              </div>
+              <div>
+                <button type="submit" class="btn btn-primary">
+                  <span>Send my request</span>
+                  <svg class="arrow" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 13 L13 3 M6 3 H13 V10"/></svg>
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <div class="info-cards reveal">
+            <div class="info-card">
+              <h4>What we do with your request</h4>
+              <p>Every Tuesday, our prayer team gathers and prays through every request that came in that week. By name. Out loud. With expectation.</p>
+            </div>
+            <div class="info-card">
+              <h4>Confidentiality</h4>
+              <p>Your request is only read by our pastoral and prayer team. We never share details publicly without your written permission.</p>
+            </div>
+            <div class="info-card">
+              <h4>Need to talk?</h4>
+              <p>If you'd like to speak with a pastor directly, mention that in your request and we'll reach out within 48 hours.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- GIVE -->
+    <section class="section" id="give">
+      <div class="container">
+        <div class="section-head reveal">
+          <div class="head-left">
+            <span class="eyebrow">Give</span>
+            <h2 class="display-lg">Generosity is <em class="italic ember">contagious.</em></h2>
+          </div>
+          <p class="lead">Everything we do — the messages, the kids ministry, the outreach, the prayer team — is funded by people like you. Thank you for sowing into this work.</p>
+        </div>
+
+        <div class="give-grid reveal">
+          <a href="#" class="give-card">
+            <span class="give-num">01 / Online</span>
+            <h3>Give online</h3>
+            <p>Secure one-time or recurring giving. Set it up in two minutes.</p>
+            <div style="margin-top: auto; padding-top: 1.2rem;"><span class="btn btn-ghost" style="pointer-events: none;"><span>Open giving</span><svg class="arrow" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 13 L13 3 M6 3 H13 V10"/></svg></span></div>
+          </a>
+          <a href="#" class="give-card">
+            <span class="give-num">02 / Text</span>
+            <h3>Text to give</h3>
+            <p>Text <strong>GIVE</strong> to <strong>(555) 123-4567</strong> from your phone.</p>
+            <div style="margin-top: auto; padding-top: 1.2rem;"><span class="btn btn-ghost" style="pointer-events: none;"><span>How it works</span><svg class="arrow" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 13 L13 3 M6 3 H13 V10"/></svg></span></div>
+          </a>
+          <a href="#" class="give-card">
+            <span class="give-num">03 / In Person</span>
+            <h3>Give Sunday</h3>
+            <p>Giving boxes are at the back of the room. Cash, check, or QR code — your call.</p>
+            <div style="margin-top: auto; padding-top: 1.2rem;"><span class="btn btn-ghost" style="pointer-events: none;"><span>See you Sunday</span><svg class="arrow" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 13 L13 3 M6 3 H13 V10"/></svg></span></div>
+          </a>
+        </div>
+
+        <p style="margin-top: 2rem; font-size: 0.88rem; color: var(--text-muted); max-width: 60ch;">New Season Church is a registered 501(c)(3). All donations are tax-deductible to the fullest extent allowed by law. A receipt will be emailed to you within 24 hours.</p>
+      </div>
+    </section>
+
+    <!-- FINAL CTA -->
+    <section class="section">
+      <div class="container">
+        <div class="connect-cta reveal">
+          <span class="eyebrow">One more thing</span>
+          <h2 class="display-lg">However you arrived <em class="italic ember">— welcome.</em></h2>
+          <p class="lead">If none of the above fit, just write us. We read every message, and we'd love to know your name.</p>
+          <div class="connect-cta-actions">
+            <a href="mailto:hello@newseason.church" class="btn btn-primary">
+              <span>hello@newseason.church</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="container-wide">
+      <div class="footer-grid">
+        <div>
+          <div class="footer-brand">New <em>Season</em><br><span style="font-size: 0.55em; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-dim); font-family: var(--font-mono); display: inline-block; margin-top: 0.3rem;">Christian Church</span></div>
+          <p class="footer-blurb">New Season Christian Church is a family of people becoming who God made them to be — together, in the middle of real life.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Visit</h4>
+          <ul>
+            <li><a href="connect.html">Plan a Visit</a></li>
+            <li><a href="connect.html#location">Location</a></li>
+            <li><a href="connect.html">Service Times</a></li>
+            <li><a href="connect.html#prayer">Prayer Request</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Explore</h4>
+          <ul>
+            <li><a href="about.html">About</a></li>
+            <li><a href="ministries.html">Ministries</a></li>
+            <li><a href="watch.html">Watch Live</a></li>
+            <li><a href="give.html">Give</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Stay close</h4>
+          <ul>
+            <li><a href="#">Instagram</a></li>
+            <li><a href="https://www.youtube.com/@newseasonchristianchurch" target="_blank" rel="noopener">YouTube</a></li>
+            <li><a href="#">Facebook</a></li>
+            <li><a href="#">Spotify</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 New Season Christian Church. All rights reserved.</span>
+        <div class="footer-socials">
+          <a href="#" aria-label="Instagram"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg></a>
+          <a href="https://www.youtube.com/@newseasonchristianchurch" target="_blank" rel="noopener" aria-label="YouTube"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="5" width="20" height="14" rx="3"/><path d="M10 9 L15 12 L10 15 Z" fill="currentColor"/></svg></a>
+          <a href="#" aria-label="Facebook"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 8h3V4h-3a4 4 0 0 0-4 4v3H7v4h3v8h4v-8h3l1-4h-4V8a1 1 0 0 1 1-1Z" fill="currentColor" stroke="none"/></svg></a>
+          <a href="#" aria-label="Spotify"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M7 10c3-1 8-1 11 1 M7.5 13.5c2.5-1 6.5-1 9 0.5 M8 16.5c2-0.5 5-0.5 7 0.5"/></svg></a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
